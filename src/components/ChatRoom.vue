@@ -12,7 +12,7 @@
           <img v-if="previewImage" :src="previewImage" alt="Selected Image" class="inside-preview-image" @click="clearPreviewImage">
           <input v-model="newMessage" @keyup.enter="sendMessage" placeholder="메시지를 입력하세요" class="message-input">
         </div>
-        <button @click="sendMessage" class="send-button">전송</button>
+        <button @click="sendMessage" class="send-button">전송하기</button>
       </div>
     </div>
   </template>
