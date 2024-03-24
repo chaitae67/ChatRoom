@@ -81,7 +81,7 @@
           socket.emit("sendmessage", messageToSend, (res) => {
             if (res?.ok) {
               this.messages.push({ text: this.newMessage, fromMe: true, type: 'text' });
-              this.newMessage = ''; // 텍스트 전송 후 입력창 초기화
+              this.newMessage = ''; // 텍스트 전송 후 입력창 초기화 함
             } else {
               console.error('Text send failed:', res?.error);
             }
