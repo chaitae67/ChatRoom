@@ -19,6 +19,7 @@
   
   <script>
   import MessageContainer from './MessageContainer.vue';
+  import socket from '../../server.js';
   
   export default {
     name: 'Chat',
@@ -45,11 +46,28 @@
     methods: {
       sendMessage() {
         if (this.previewImage) {
-          this.messages.push({ image: this.previewImage, fromMe: true, type: 'image' });
-          this.previewImage = null;
-        } else if (this.newMessage.trim() !== '') {
-          this.messages.push({ text: this.newMessage, fromMe: true, type: 'text' });
-          this.newMessage = '';
+          // 이미지 메시지를 전송하는 경우
+          const messageToSend = { image: this.previewImage, type: 'image' };
+          socket.emit("sendmessage", messageToSend, (res) => {
+            if (res?.ok) {
+              this.messages.push({ image: this.previewImage, fromMe: true, type: 'image' });
+              this.previewImage = null; // 이미지 전송 후 미리보기 초기화
+            } else {
+              console.error('Image send failed:', res?.error);
+            }
+          });
+        }
+        else if (this.newMessage.trim() !== '') {
+          // 텍스트 메시지를 전송하는 경우
+          const messageToSend = { text: this.newMessage.trim(), type: 'text' };
+          socket.emit("sendmessage", messageToSend, (res) => {
+            if (res?.ok) {
+              this.messages.push({ text: this.newMessage, fromMe: true, type: 'text' });
+              this.newMessage = ''; // 텍스트 전송 후 입력창 초기화
+            } else {
+              console.error('Text send failed:', res?.error);
+            }
+          });
         }
       },
       handleImageSelect(event) {
