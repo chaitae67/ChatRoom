@@ -1,16 +1,17 @@
 <template>
-    <div class="message-container" ref="messageContainer">
-      <div v-for="(message, index) in messages" :key="index"
-          :class="message.fromMe ? 'my-message' : 'other-message'">
-        <template v-if="message.type === 'text'">{{ message.text }}</template>
-        <template v-else>
-          <img :src="message.image" alt="Sent Image" class="sent-image" @load="scrollToBottom">
-        </template>
-      </div>
+  <div class="message-container" ref="messageContainer">
+    <div v-for="(message, index) in messages" :key="index"
+        :class="message.fromMe ? 'my-message' : 'other-message'">
+      <template v-if="message.type === 'text'">{{ message.text }}</template>
+      <template v-else-if="message.type === 'image'">
+        <img :src="message.image" alt="Sent Image" class="sent-image" @load="scrollToBottom">
+      </template>
     </div>
-  </template>
+  </div>
+</template>
+
   
-  <script>
+<script>
 export default {
   name: 'MessageContainer',
   props: {
@@ -21,17 +22,20 @@ export default {
   },
   watch: {
     messages() {
+      // 메시지 배열이 변경될 때마다 화면의 스크롤을 아래로 내립니다.
       this.$nextTick(this.scrollToBottom);
     }
   },
   methods: {
     scrollToBottom() {
-      const container = this.$el;
+      // 스크롤을 가장 아래로 내리는 메서드입니다.
+      const container = this.$refs.messageContainer;
       container.scrollTop = container.scrollHeight;
     }
-  }
+  },
 };
 </script>
+
 
   
   <style scoped>
@@ -42,13 +46,13 @@ export default {
   }
   
   .my-message {
-      background-color: #e4e4e4;
+      background-color: #dcf8c6;
       padding: 10px;
       border-radius: 10px;
       max-width: 70%;
       word-wrap: break-word;
       align-self: flex-end;
-      margin-left: auto;
+      margin-right: auto;
       margin-top: 10px;
   }
   

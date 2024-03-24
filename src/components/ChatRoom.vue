@@ -5,6 +5,7 @@
         <h2 class="user-name">{{ userName }}</h2>
       </div>
       <MessageContainer :messages="messages"/>
+      <MessageContainerR :receive="receive"/>
       <div class="input-container">
         <button @click="showFileInput" class="attach-button">사진 첨부</button>
         <input type="file" accept="image/*" ref="fileInput" @change="handleImageSelect" capture="environment" class="file-input">
@@ -20,12 +21,15 @@
   <script>
   import MessageContainer from './MessageContainer.vue';
   import socket from '../../server.js';
+  import MessageContainerR from './MeesageContainerR.vue';
   
   export default {
     name: 'Chat',
     components: {
-      MessageContainer
+      MessageContainer:MessageContainer,
+      MessageContainerR:MessageContainerR,
     },
+
     props: {
       profilePicture: {
         type: String,
@@ -43,6 +47,7 @@
         previewImage: null
       };
     },
+
     methods: {
       sendMessage() {
         if (this.previewImage) {
@@ -86,7 +91,18 @@
       clearPreviewImage() {
         this.previewImage = null;
       }
-    }
+    },
+
+    mounted() {
+    // 서버로부터 메시지를 수신하기 위한 소켓 이벤트 리스너를 설정합니다.
+    socket.on('receiveMessage', (message) => {
+      // message 객체에 fromMe 속성을 추가하여 메시지가 다른 사용자에 의해 보내졌는지 여부를 표시합니다.
+      // 이 예제에서는 모든 수신 메시지가 fromMe: false를 가집니다.
+      const messageWithFromMe = { ...message, fromMe: false };
+      this.messages.push(messageWithFromMe);
+    });
+  },
+
   };
   </script>
 
