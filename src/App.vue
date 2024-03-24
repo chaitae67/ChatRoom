@@ -1,7 +1,10 @@
 // App.vue
 
 <template>
-  <Chat :userName="userName" :profilePicture="profilePicture"/>
+
+  <router-view></router-view>
+
+  <!--<Chat :userName="userName" :profilePicture="profilePicture" />-->
 </template>
 
 <script>
@@ -28,7 +31,7 @@ export default {
       console.log('User name:', this.userName);
       // 로그인 이벤트 발생 및 사용자 정보 전달
       socket.emit("login", this.userName, (res) => {
-        if(res?.ok){
+        if (res?.ok) {
           console.log('User logged in:', res.data);
         }
       });

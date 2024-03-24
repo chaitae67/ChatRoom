@@ -1,5 +1,6 @@
 <template>
-  dfdfdfdf
+  http://localhost:8080/chat
+  http://localhost:8080/header
 </template>
 
 <script>

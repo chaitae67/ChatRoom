@@ -3,8 +3,11 @@
 import { createApp } from 'vue'
 import App from './App.vue'
 import socket from "../server.js";
+import router from './router'
 
 const app = createApp(App);
+
+app.use(router); 
 
 app.config.globalProperties.$socket = socket;
 
@@ -14,4 +17,4 @@ socket.on('message', (message) => {
   // 이 부분에서 받은 메시지를 화면에 출력하거나 처리할 수 있습니다.
 });
 
-app.mount('#app')
+app.mount('#app');
