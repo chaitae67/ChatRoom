@@ -1,5 +1,3 @@
-// App.vue
-
 <template>
   <Chat :userName="userName" :profilePicture="profilePicture"/>
 </template>

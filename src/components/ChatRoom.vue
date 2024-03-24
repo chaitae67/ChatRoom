@@ -22,6 +22,8 @@
   import MessageContainer from './MessageContainer.vue';
   import socket from '../../server.js';
   import MessageContainerR from './MeesageContainerR.vue';
+  import axios from 'axios';
+  import FormData from 'form-data';
   
   export default {
     name: 'Chat',
@@ -44,25 +46,36 @@
       return {
         messages: [],
         newMessage: '',
-        previewImage: null
+        previewImage: null,
+        selectedFile: null,
       };
     },
 
     methods: {
-      sendMessage() {
+      async sendMessage() {
         if (this.previewImage) {
           // 이미지 메시지를 전송하는 경우
           const messageToSend = { image: this.previewImage, type: 'image' };
-          socket.emit("sendmessage", messageToSend, (res) => {
+          socket.emit("sendmessage", messageToSend, async (res) => {
             if (res?.ok) {
               this.messages.push({ image: this.previewImage, fromMe: true, type: 'image' });
-              this.previewImage = null; // 이미지 전송 후 미리보기 초기화
+              
+              // 이미지 분석 API로 이미지 전송
+              try {
+                const analyzeResult = await this.sendImageToAnalyze(this.selectedFile);
+                console.log('Analyze result:', analyzeResult);
+                // 필요하다면 분석 결과를 상태에 저장하거나 사용자에게 표시할 수 있습니다.
+              } catch (error) {
+                console.error('Image analysis failed:', error);
+              }
+
+              // 이미지 전송 후 미리보기 초기화
+              this.previewImage = null;
             } else {
               console.error('Image send failed:', res?.error);
             }
           });
-        }
-        else if (this.newMessage.trim() !== '') {
+        } else if (this.newMessage.trim() !== '') { 
           // 텍스트 메시지를 전송하는 경우
           const messageToSend = { text: this.newMessage.trim(), type: 'text' };
           socket.emit("sendmessage", messageToSend, (res) => {
@@ -75,14 +88,29 @@
           });
         }
       },
+      async sendImageToAnalyze() {
+        const formData = new FormData();
+        formData.append('file', this.selectedFile); // 'this.selectedFile'은 사용자가 선택한 파일 객체입니다.
+
+        try {
+          const response = await axios.post('http://220.69.241.101:8000/analyze/', formData, {
+            headers: {
+              'Content-Type': 'multipart/form-data'
+            },
+          });
+          console.log("분석 결과:", response.data);
+          // 분석 결과를 처리합니다.
+        } catch (error) {
+          console.error('Image analysis failed:', error);
+        }
+      },
       handleImageSelect(event) {
         const file = event.target.files[0];
         if (file) {
-          const reader = new FileReader();
-          reader.onload = () => {
-            this.previewImage = reader.result;
-          };
-          reader.readAsDataURL(file);
+          // 미리보기를 위해 이미지 URL을 생성합니다.
+          this.previewImage = URL.createObjectURL(file);
+          // 선택된 파일을 저장합니다. Base64 인코딩 없이 파일 객체를 직접 사용합니다.
+          this.selectedFile = file;
         }
       },
       showFileInput() {
