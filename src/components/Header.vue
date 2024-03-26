@@ -17,19 +17,25 @@
           </div>
         </div>
       </form>
-      <div>
-        <button class="list_button">
-          <img src="../assets/bag.svg" class="list_icon">
-          중고거래
-        </button>
-        <button class="list_button">
-          <img src="../assets/coin.svg" class="list_icon">
-          판매하기
-        </button>
-        <button class="list_button">
-          <img src="../assets/shop.svg" class="list_icon">
-          내상점
-        </button>
+      <div class="list_container">
+        <div class="list_box">
+          <div class="list">
+            <img src="../assets/bag.svg" class="list_icon">
+            <button class="list_button">중고거래</button>
+          </div>
+        </div>
+        <div class="list_box">
+          <div class="list">
+            <img src="../assets/coin.svg" class="list_icon">
+            <button class="list_button">판매하기</button>
+          </div>
+        </div>
+        <div class="list_box">
+          <div class="list">
+            <img src="../assets/shop.svg" class="list_icon">
+            <button class="list_button">내상점</button>
+          </div>
+        </div>
       </div>
     </div>
   </header>
@@ -54,7 +60,10 @@ body {
 }
 
 .login_container {
-  margin-left: 70%;
+  width: 1024px;
+  margin: 0 auto;
+  justify-content: flex-end;
+  display: flex;
 }
 
 .login_button {
@@ -62,6 +71,7 @@ body {
   background-color: transparent;
   font-size: 16px;
   color: gray;
+  cursor: pointer;
 }
 
 .logo {
@@ -72,20 +82,24 @@ body {
 .header {
   position: sticky;
   display: flex;
-  width: 100%;
-  -webkit-box-pack: center;
   justify-content: center;
-  padding-top: 35px;
   background: rgb(255, 255, 255);
   z-index: 10;
   border-bottom: 1px solid rgb(238, 238, 238);
   top: 0px;
   left: 0px;
+  width: 1024px;
 }
 
 .logo_container {
+  position: sticky;
   display: flex;
   align-items: center;
+  padding: 10px;
+  background: rgb(255, 255, 255);
+  z-index: 10;
+  border-bottom: 1px solid rgb(238, 238, 238);
+
 }
 
 .serch_button {
@@ -103,7 +117,7 @@ body {
 
 .search_container {
   border: 3px solid rgb(45, 168, 55);
-  width: 460px;
+  width: 350px;
   height: 40px;
   box-sizing: border-box;
   position: relative;
@@ -120,13 +134,46 @@ body {
   width: 20px;
   height: 20px;
 }
-.list_icon{
+
+.list_icon {
   width: 22px;
   height: 22px;
+  cursor: pointer;
 }
-.list_button{
+
+.list_button {
   font-size: 18px;
   border: none;
   background-color: transparent;
+  cursor: pointer;
+}
+
+.list_box {
+  display: flex;
+  align-items: center;
+  margin-left: 15px;
+}
+
+.list {
+  display: flex;
+  align-items: center;
+}
+
+.list_box:not(:last-child)::after {
+  content: "";
+  position: relative;
+  display: block;
+  width: 1px;
+  height: 10px;
+  background-color: rgb(197, 197, 197);
+  margin-left: 10px;
+}
+
+.list_container {
+  display: flex;
+  flex-grow: 1;
+  align-items: center;
+  justify-content: flex-end;
+  margin: 0 auto;
 }
 </style>
