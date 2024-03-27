@@ -4,7 +4,7 @@
 
   <router-view></router-view>
 
-  <!--<Chat :userName="userName" :profilePicture="profilePicture" />-->
+  <Chat :userName="userName" :profilePicture="profilePicture" />
 </template>
 
 <script>

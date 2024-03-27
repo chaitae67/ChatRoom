@@ -8,7 +8,7 @@
 
   <header class="header">
     <div class="logo_container">
-      <img src="../assets/BB.svg" alt="없음" class="logo">
+      <img src="../assets/buybye.svg" alt="없음" class="logo">
       <form>
         <div class="search_container">
           <div class="search_box">
@@ -38,6 +38,10 @@
         </div>
       </div>
     </div>
+
+    <div class="categoly_container">
+      <img src="C:\Users\chait\OneDrive\바탕 화면\3팀\ChatRoom\src\assets\list.svg" alt="없음">
+    </div>
   </header>
 </template>
 
@@ -54,7 +58,7 @@ body {
 
 .header_top {
   border-bottom: 1px solid rgb(238, 238, 238);
-  height: 50px;
+  height: 40px;
   align-items: center;
   display: flex;
 }
@@ -69,36 +73,33 @@ body {
 .login_button {
   border: none;
   background-color: transparent;
-  font-size: 16px;
+  font-size: 13px;
   color: gray;
   cursor: pointer;
 }
 
 .logo {
-  width: 80px;
-  height: 80px;
+  width: 110px;
+  height: 110px;
+  color: rgb(5, 174, 5);
 }
 
 .header {
-  position: sticky;
-  display: flex;
-  justify-content: center;
   background: rgb(255, 255, 255);
   z-index: 10;
   border-bottom: 1px solid rgb(238, 238, 238);
   top: 0px;
   left: 0px;
-  width: 1024px;
 }
 
 .logo_container {
-  position: sticky;
+  width: 1024px;
+  padding: 10px;
+  margin: 0 auto;
   display: flex;
   align-items: center;
-  padding: 10px;
   background: rgb(255, 255, 255);
   z-index: 10;
-  border-bottom: 1px solid rgb(238, 238, 238);
 
 }
 
@@ -121,6 +122,7 @@ body {
   height: 40px;
   box-sizing: border-box;
   position: relative;
+  margin-left: 110px;
 }
 
 .input_box {
@@ -175,5 +177,12 @@ body {
   align-items: center;
   justify-content: flex-end;
   margin: 0 auto;
+}
+
+.categoly_container{
+  width: 1024px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;;
 }
 </style>
