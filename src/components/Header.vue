@@ -9,15 +9,24 @@
       <div class="title_box">필요한 건 BUY! 필요없는 건 BYE!</div>
       <div class="subtitle_box">쉽고 빠르게 시작하세요</div>
       <div class="button_container">
-        <button class="login_button" @mouseover="hoverBackground('kakao_button')">
-          <div class="kakao_button button_background"></div>
+        <button class="login_button" 
+        @mouseover="hoverBackground('kakao')" 
+        @mouseleave="hoverBackground('')" 
+        :style="isHovered === 'kakao' ? { backgroundColor: 'rgb(60, 52, 31)', color: 'white' } : {}">
+          <div class="button_background"></div>
           카카오로 이용하기
         </button>
-        <button class="login_button">
+        <button class="login_button" 
+        @mouseover="hoverBackground('naver')" 
+        @mouseleave="hoverBackground('')" 
+        :style="isHovered === 'naver' ? { backgroundColor: 'rgb(3, 199, 90)',color: 'white' } : {}">
           <div class="naver_button button_background"></div>
           네이버로 이용하기
         </button>
-        <a class="id_button" href="로그인 창">
+        <a class="id_button" href="LogIn" 
+        @mouseover="hoverBackground('idpw')" 
+        @mouseleave="hoverBackground('')" 
+        :style="isHovered === 'idpw' ? { backgroundColor: 'rgb(0,0,0)',color: 'white' } : {}">
           <div class="basic_button"></div>
           ID/PW로 이용하기
         </a>
@@ -90,6 +99,7 @@ export default {
   data() {
     return {
       showLoginModal: false, // 모달 창을 보여주는 상태 변수
+      isHovered: '', // 현재 호버된 버튼의 종류를 저장
     };
   },
   methods: {
@@ -99,14 +109,14 @@ export default {
     closeLoginModal() {
       this.showLoginModal = false; // 모달 창을 닫는 메소드
     },
-    hoverBackground(button) {
-      this.isHovered = button;
+    hoverBackground(buttonType) {
+      this.isHovered = buttonType; // 버튼 타입에 따라 현재 호버된 버튼을 설정
     }
   },
 };
 </script>
 
-<style>
+<style scoped>
 body {
   margin: 0;
 }
@@ -116,6 +126,7 @@ a {
   text-decoration: none;
   cursor: pointer;
   font-size: 14px;
+
 }
 p {
   display: block;
@@ -126,11 +137,10 @@ p {
   width: 100%;
   border-top: 1px solid rgb(229, 229, 229);
   padding-top: 1rem;
+  text-align: center; 
 }
 
-.login_button:hover {
-  background-color: rgb(235, 235, 45); /* 호버 시 배경색 변경 */
-}
+
 .Modal_background {
   background: rgba(0, 0, 0, 0.6);
   width: 100%;
@@ -193,6 +203,8 @@ p {
   position: relative;
   border: none;
   color: black;
+  font-weight: medium;
+  cursor: pointer;
 }
 .id_button {
   display: flex;
@@ -210,6 +222,7 @@ p {
   position: relative;
   padding: 0; /* 내부 패딩 제거 */
   text-decoration: none; /* 밑줄 제거 */
+  font-size: 13.3px;
 }
 .button_background{
   position: absolute;
@@ -221,7 +234,7 @@ p {
   background-repeat: no-repeat;
 }
 .kakao_button {
-  background-image: "../assets/kakao.png";
+  background-image: "~@/asserts/kakao.png";
 }
 .naver_button {
   background-image: "../assets/naver.png";
@@ -294,7 +307,7 @@ p {
 
 .search_container {
   border: 3px solid rgb(45, 168, 55);
-  width: 350px;
+  width: 400px;
   height: 40px;
   box-sizing: border-box;
   position: relative;
@@ -306,11 +319,12 @@ p {
   -webkit-box-flex: 1;
   flex-grow: 1;
   border: none;
+  outline: none;
 }
 
 .search_icon {
-  width: 20px;
-  height: 20px;
+  width: 17px;
+  height: 17px;
 }
 
 .list_icon {
@@ -320,7 +334,7 @@ p {
 }
 
 .list_button {
-  font-size: 18px;
+  font-size: 15px;
   border: none;
   background-color: transparent;
   cursor: pointer;
@@ -362,4 +376,5 @@ p {
   align-items: center;
   margin-bottom: 20px;
 }
+
 </style>

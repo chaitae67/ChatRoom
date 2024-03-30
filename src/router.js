@@ -1,7 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import Header from './components/Header.vue';
 import Chat from './components/ChatRoom.vue';
-import Main from './components/MainPage.vue'
+import Main from './components/MainPage.vue';
+import LogIn from './components/LogIn.vue'
 
 const router = createRouter({
   history: createWebHistory(),
@@ -23,6 +24,11 @@ const router = createRouter({
         name: 'main',
         component: Main,
     },
+    {
+      path: '/LogIn',
+      name: 'login',
+      component: LogIn,
+  },
   ],
 });
 
