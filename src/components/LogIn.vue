@@ -18,14 +18,18 @@
         </div>
         <div class="signup_box">
             <span class="first">처음이신가요? </span>
-            <span class="signup_text">회원가입</span>
+            <span  @click="handleSignup" class="signup_text">회원가입</span>
         </div>
     </div>
 </template>
 
 <script>
 export default {
-
+    methods: {
+        handleSignup(){
+            this.$router.push('./SignUp')
+        }
+    }
 }
 </script>
 
