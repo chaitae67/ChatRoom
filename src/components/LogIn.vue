@@ -1,39 +1,65 @@
 <template>
     <div class="login_container">
-        <div class="logo_container">
-            <img src="../assets/BB.svg" style="width: 80px; height: 80px;">
-        </div>
-        <div class="login_text">
-            ID/PW 로그인 
-        </div>
-        <input type="text" placeholder="아이디 or 휴대폰번호로 입력" class="id_input">
-        <input type="password" placeholder="비밀번호 입력" class="pw_input">
-        <div class="search_box">
-            <span class="search_text">아이디찾기</span>
-            <span style="padding:0px 5px">|</span>
-            <span class="search_text">비밀번호 찾기</span>
-        </div>
-        <div class="login_button">
-            로그인
-        </div>
-        <div class="signup_box">
-            <span class="first">처음이신가요? </span>
-            <span  @click="handleSignup" class="signup_text">회원가입</span>
-        </div>
+      <div class="logo_container">
+        <img src="../assets/BB.svg" style="width: 80px; height: 80px;">
+      </div>
+      <div class="login_text">
+        ID/PW 로그인 
+      </div>
+      <input type="text" placeholder="아이디 or 휴대폰번호로 입력" class="id_input">
+      <div class="password_box">
+        <input :type="showPassword ? 'text' : 'password'" placeholder="비밀번호 입력" class="pw_input">
+        <img :src="showPassword ? getPwPng(1) : getPwPng(0)" class="password_icon" @click="togglePasswordVisibility">
+      </div>
+      <div class="search_box">
+        <span class="search_text">아이디찾기</span>
+        <span style="padding:0px 5px">|</span>
+        <span class="search_text">비밀번호 찾기</span>
+      </div>
+      <div class="login_button">
+        로그인
+      </div>
+      <div class="signup_box">
+        <span class="first">처음이신가요? </span>
+        <span @click="handleSignup" class="signup_text">회원가입</span>
+      </div>
     </div>
-</template>
-
-<script>
-export default {
+  </template>
+  
+  <script>
+  export default {
+    data() {
+      return {
+        showPassword: false 
+      };
+    },
     methods: {
-        handleSignup(){
-            this.$router.push('./SignUp')
+        getPwPng(num) {
+            if (num == 0) {
+                return require('../assets/ico_join_pw_on.png')
+            } else {
+                return require('../assets/ico_join_pw_off.png')
+            }
+        },
+      handleSignup() {
+        this.$router.push('./SignUp')
+      },
+      togglePasswordVisibility() {
+        this.showPassword = !this.showPassword; 
+        if (this.showPassword) {
+          document.querySelector('.pw_input').type = 'text';
+        } else {
+          document.querySelector('.pw_input').type = 'password';
         }
+      }
     }
-}
-</script>
+  };
+  </script>
 
 <style scoped>
+.password_box{
+    position: relative;
+}
 .login_container{
     width:400px;
     margin: 0px auto;
@@ -78,6 +104,7 @@ export default {
     border-bottom: 1px solid rgb(240, 240, 240);
     outline: none;
     color: gray;
+    height: 22px;
 }
 .search_box{
     text-align: right;
@@ -111,5 +138,13 @@ export default {
     cursor: pointer;
     font-weight:700;
     color: rgb(5, 174, 5);
+}
+.password_icon{
+    position: absolute;
+    top: 23px;
+    right: 23px;
+    width: 20px;
+    height: 16px;
+    cursor: pointer; 
 }
 </style>
