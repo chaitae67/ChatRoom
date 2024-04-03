@@ -306,7 +306,7 @@ p {
 }
 
 .search_container {
-  border: 3px solid rgb(45, 168, 55);
+  border: 4px solid rgb(45, 168, 55);
   width: 400px;
   height: 40px;
   box-sizing: border-box;

@@ -8,7 +8,7 @@
       </div>
       <input type="text" placeholder="아이디 or 휴대폰번호로 입력" class="id_input">
       <div class="password_box">
-        <input :type="showPassword ? 'text' : 'password'" placeholder="비밀번호 입력" class="pw_input">
+        <input :type="showPassword ? 'text' : 'password'" v-model="userPassword" @input="preventKoreanInput('userPassword', $event)" placeholder="비밀번호 입력" class="pw_input">
         <img :src="showPassword ? getPwPng(1) : getPwPng(0)" class="password_icon" @click="togglePasswordVisibility">
       </div>
       <div class="search_box">
@@ -26,35 +26,48 @@
     </div>
   </template>
   
-  <script>
-  export default {
-    data() {
-      return {
-        showPassword: false 
-      };
+<script>
+export default {
+  data() {
+    return {
+      showPassword: false,
+      userId: '', // 아이디 입력 데이터
+      userPassword: '', // 비밀번호 입력 데이터
+      current_password: ""
+    };
+  },
+  methods: {
+    getPwPng(num) {
+      return num == 0 ? require('../assets/ico_join_pw_on.png') : require('../assets/ico_join_pw_off.png');
     },
-    methods: {
-        getPwPng(num) {
-            if (num == 0) {
-                return require('../assets/ico_join_pw_on.png')
-            } else {
-                return require('../assets/ico_join_pw_off.png')
-            }
-        },
-      handleSignup() {
-        this.$router.push('./SignUp')
-      },
-      togglePasswordVisibility() {
-        this.showPassword = !this.showPassword; 
-        if (this.showPassword) {
-          document.querySelector('.pw_input').type = 'text';
+    handleSignup() {
+      this.$router.push('./SignUp');
+    },
+    togglePasswordVisibility() {
+      this.showPassword = !this.showPassword;
+    },
+    formatInput(text) {
+      // text에 부모 input에 넣는 값이 들어옵니다.
+      if (this.validType === "password") {
+        // 한글 테스트 정규식
+        const notPhoneticSymbolExp = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/;
+        if (!notPhoneticSymbolExp.test(text)) {
+          return text;
         } else {
-          document.querySelector('.pw_input').type = 'password';
+          // 한글이 빠른 시간에 여러개 들어오는 경우도 있으니,한글이 없을 때까지 삭제하고, 검사
+          text = text.slice(0, -1);
+          let condition = notPhoneticSymbolExp.test(text);
+          while (condition) {
+            text = text.slice(0, -1);
+            condition = notPhoneticSymbolExp.test(text);
+          }
+          return text;
         }
-      }
+      } else return text;
     }
-  };
-  </script>
+  }
+};
+</script>
 
 <style scoped>
 .password_box{
