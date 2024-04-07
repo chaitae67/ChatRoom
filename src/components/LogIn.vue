@@ -6,9 +6,9 @@
       <div class="login_text">
         ID/PW 로그인 
       </div>
-      <input type="text" placeholder="아이디 or 휴대폰번호로 입력" class="id_input">
+      <input v-model="userId" type="text" placeholder="아이디 or 휴대폰번호로 입력" class="id_input">
       <div class="password_box">
-        <input :type="showPassword ? 'text' : 'password'" v-model="userPassword" @input="preventKoreanInput('userPassword', $event)" placeholder="비밀번호 입력" class="pw_input">
+        <input v-model="userPassword" :type="showPassword ? 'text' : 'password'" placeholder="비밀번호 입력" class="pw_input">
         <img :src="showPassword ? getPwPng(1) : getPwPng(0)" class="password_icon" @click="togglePasswordVisibility">
       </div>
       <div class="search_box">
@@ -16,7 +16,7 @@
         <span style="padding:0px 5px">|</span>
         <span class="search_text">비밀번호 찾기</span>
       </div>
-      <div class="login_button">
+      <div @click="login" class="login_button" >
         로그인
       </div>
       <div class="signup_box">
@@ -27,13 +27,14 @@
   </template>
   
 <script>
+import axios from 'axios';
+
 export default {
   data() {
     return {
       showPassword: false,
-      userId: '', // 아이디 입력 데이터
-      userPassword: '', // 비밀번호 입력 데이터
-      current_password: ""
+      userId: '',
+      userPassword: '',
     };
   },
   methods: {
@@ -43,27 +44,18 @@ export default {
     handleSignup() {
       this.$router.push('./SignUp');
     },
-    togglePasswordVisibility() {
-      this.showPassword = !this.showPassword;
-    },
-    formatInput(text) {
-      // text에 부모 input에 넣는 값이 들어옵니다.
-      if (this.validType === "password") {
-        // 한글 테스트 정규식
-        const notPhoneticSymbolExp = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/;
-        if (!notPhoneticSymbolExp.test(text)) {
-          return text;
-        } else {
-          // 한글이 빠른 시간에 여러개 들어오는 경우도 있으니,한글이 없을 때까지 삭제하고, 검사
-          text = text.slice(0, -1);
-          let condition = notPhoneticSymbolExp.test(text);
-          while (condition) {
-            text = text.slice(0, -1);
-            condition = notPhoneticSymbolExp.test(text);
-          }
-          return text;
-        }
-      } else return text;
+    login() {
+      axios.post('https://bffff47d-e1e7-4df4-b2b7-a2e0f871fe53.mock.pstmn.io', {
+        userId: this.userId,
+        password: this.userPassword,
+      })
+      .then(response => {
+        console.log('로그인 성공:', response);
+        //this.$router.push('./MainPage');
+      })
+      .catch(error => {
+        console.error('로그인 실패:', error);
+      });
     }
   }
 };

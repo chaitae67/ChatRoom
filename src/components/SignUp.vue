@@ -94,7 +94,7 @@ export default {
 
 .signup_container {
     width: 400px;
-    margin: 70px auto 0px;
+    margin: 0px auto 0px;
 }
 
 .logo_container {
