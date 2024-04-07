@@ -187,7 +187,6 @@ export default {
   
   .channel-nickname {
     font-size: 16px;
-    font-weight: bold;
   }
   
   .message-form {
