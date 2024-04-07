@@ -96,8 +96,9 @@ addNewMessage(newMessage) {
 <style scoped>
 .app {
   display: flex;
-  height: 100vh;
+  height: calc(100vh-60px);
   background: #FFFFFF;
+  width: calc(100vw-400px);
 }
 
 .sidebar {

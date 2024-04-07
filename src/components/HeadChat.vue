@@ -1,21 +1,9 @@
 <template>
   <div class="container">
     <img src="../assets/buybye.png" alt="바이바이" class="bblogo">
-    <button @click="leaveChat">나가기</button>
+    <button @click="leaveChat" class="out">나가기</button>
   </div>
 </template>
-
-<script>
-export default {
-  name: 'HeadChat',
-  methods: {
-    leaveChat() {
-      // 채팅에서 나가는 기능을 구현할 수 있습니다.
-      console.log('채팅에서 나갑니다.');
-    }
-  }
-};
-</script>
 
 <style scoped>
 .container {
@@ -32,5 +20,16 @@ export default {
 .bblogo {
   height: 60px;
   padding: 40px;
+}
+
+.out{
+    margin-top: 8px;
+    padding: 6px 12px;
+    background-color: #04B404;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-left: auto; /* 버튼을 오른쪽으로 이동시킵니다. */
 }
 </style>

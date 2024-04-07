@@ -154,7 +154,7 @@ export default {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  min-height: 100vh;
+  height: 100vh;
   width: 812px;
   background-color: white;
   margin: 0 auto; /* 중앙 정렬 */
@@ -197,7 +197,7 @@ export default {
     height: 125px;
     border: 2px solid rgb(45, 168, 55);
     border-radius: 8px;
-    padding: 8px;
+    padding: 5px;
   }
   
   .message-input {
@@ -208,7 +208,6 @@ export default {
     font-size: 14px;
     border: none;
     outline: none;
-    border-radius: 4px;
   }
   
   .img-button {
@@ -237,8 +236,8 @@ export default {
   .box {
     padding: 0px 20px;
     background-color:white ;
-    height: 700px;
-    border-radius: 20px;
+    height: 750px;
+    border-radius: 0px;
     overflow-y: auto; /* 새로운 스타일: 메시지가 많을 경우 스크롤 가능 */
   }
   

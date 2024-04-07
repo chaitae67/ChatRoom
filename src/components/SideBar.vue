@@ -19,7 +19,7 @@ export default {
     border-left: 1px solid  #dee2e6;
     border-right: 1px solid  #dee2e6;
     padding: 20px 13px;
-    height: 100%; /* 수정된 부분 */
+    height: 100vh; /* 수정된 부분 */
     width: 72px;
     background-color: rgb(45, 168, 55);
 }
