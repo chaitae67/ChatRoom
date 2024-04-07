@@ -1,36 +1,44 @@
 <template>
-  <Chat :userName="userName" :profilePicture="profilePicture"/>
+  <div id="app">
+    <HeadChat/>
+    <ChatApp/>
+  </div>
+
 </template>
 
 <script>
-import Chat from './components/ChatRoom.vue';
-import socket from '../server.js';
+import HeadChat from './components/HeadChat.vue';
+import ChatApp from './components/ChatApp.vue';
 
 export default {
+  name: 'App',
   components: {
-    Chat: Chat,
+    HeadChat,
+    ChatApp,
   },
-  data() {
-    return {
-      userName: null,
-      profilePicture: 'profile.jpg', // 프로필 이미지 경로 설정
-      newMessage: ''
-    };
+  data(){
+    return{};
   },
-  mounted() {
-    this.askUserName();
-  },
-  methods: {
-    askUserName() {
-      this.userName = prompt('당신의 이름을 입력하세요');
-      console.log('User name:', this.userName);
-      // 로그인 이벤트 발생 및 사용자 정보 전달
-      socket.emit("login", this.userName, (res) => {
-        if(res?.ok){
-          console.log('User logged in:', res.data);
-        }
-      });
-    },
-  }
 };
 </script>
+
+<style scoped>
+.chat-app {
+  font-family: Arial, sans-serif;
+  text-align: center;
+}
+
+/* 화면 너비가 768px 이하일 때 */
+@media (max-width: 768px) {
+  .chat-app {
+    /* 반응형 스타일 */
+  }
+}
+
+/* 화면 너비가 768px보다 큰 경우 */
+@media (min-width: 769px) {
+  .chat-app {
+    /* 반응형 스타일 */
+  }
+}
+</style>

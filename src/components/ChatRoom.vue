@@ -1,301 +1,290 @@
 <template>
-    <div class="chat-room">
-      <div class="chat-header">
-        <img class="profile-picture" :src="profilePicture" alt="Profile Picture">
-        <h2 class="user-name">{{ userName }}</h2>
+  <div class="chatroom">
+    <!-- 채널 정보 헤더 -->
+    <div class="chat-header">
+      <div class="profile-wrapper">
+        <img :src="channel.profileImage" class="profile-image" alt="Channel Profile">
       </div>
-      <MessageContainer :messages="messages"/>
-      <MessageContainerR :receive="receive"/>
-      <div class="input-container">
-        <button @click="showFileInput" class="attach-button">사진 첨부</button>
-        <input type="file" accept="image/*" ref="fileInput" @change="handleImageSelect" capture="environment" class="file-input">
-        <div class="message-input-container">
-          <img v-if="previewImage" :src="previewImage" alt="Selected Image" class="inside-preview-image" @click="clearPreviewImage">
-          <input v-model="newMessage" @keyup.enter="sendMessage" placeholder="메시지를 입력하세요" class="message-input">
-        </div>
-        <button @click="sendMessage" class="send-button">전송</button>
+      <div class="channel-info">
+        <div class="channel-nickname">{{ channel.nickname }}</div>
       </div>
     </div>
-  </template>
-  
-  <script>
-  import MessageContainer from './MessageContainer.vue';
-  import socket from '../../server.js';
-  import MessageContainerR from './MeesageContainerR.vue';
-  import axios from 'axios';
-  import FormData from 'form-data';
-  
-  export default {
-    name: 'Chat',
-    components: {
-      MessageContainer:MessageContainer,
-      MessageContainerR:MessageContainerR,
-    },
+    <!-- 채팅 내용 표시 -->
+    <div class="box">
+      <div class="chat-messages" ref="chatMessages">
+        <component
+          v-for="(message, index) in channelMessages[channel.id]"
+          :key="index"
+          :is="message.sender === 'user' ? 'UserMessage' : 'OtherMessage'"
+          :message="message"
+        />
+      </div>
+    </div>
+    <!-- 메시지 입력 폼 -->
+    <form class="message-form" @submit.prevent="addMessage">
+      <textarea v-model="newMessage" placeholder="메세지를 입력하세요." class="message-input"></textarea>
+      <!-- 파일 선택 input -->
+      <input type="file" id="fileInput" @change="handleFileUpload" style="display: none;" />
+      <!-- 파일 선택 버튼 -->
+      <label for="fileInput" class="img-button">
+        <img src="../assets/photo.png" alt="Upload Icon" class="photo" />
+      </label>
+      <!-- 전송 버튼 -->
+      <button type="submit" class="send-button">전송</button>
+    </form>
+    <!-- 모달 -->
+    <Modal v-if="isModalOpen" @close="closeModal" @send="sendImage">
+      <img :src="previewImage" alt="Preview" class="preview-image" />
+      <div class="modal-buttons">
+        <button class="button-send" @click="sendImage">전송</button>
+        <button class="button-cancel" @click="cancelImage">취소</button>
+      </div>
+    </Modal>
+  </div>
+</template>
 
-    props: {
-      profilePicture: {
-        type: String,
-        required: true
-      },
-      userName: {
-        type: String,
-        required: true
-      }
-    },
-    data() {
-      return {
-        messages: [],
-        newMessage: '',
-        previewImage: null,
-        selectedFile: null,
-      };
-    },
+<script>
+import Modal from './Modal.vue';
+import UserMessage from './UserMessage.vue';
+import OtherMessage from './OtherMessage.vue';
 
-    methods: {
-      async sendMessage() {
-        if (this.previewImage) {
-          // 이미지 메시지를 전송하는 경우
-          const messageToSend = { image: this.previewImage, type: 'image' };
-          socket.emit("sendmessage", messageToSend, async (res) => {
-            if (res?.ok) {
-              this.messages.push({ image: this.previewImage, fromMe: true, type: 'image' });
-              
-              // 이미지 분석 API로 이미지 전송
-              try {
-                const analyzeResult = await this.sendImageToAnalyze(this.selectedFile);
-                console.log('Analyze result:', analyzeResult);
-                // 필요하다면 분석 결과를 상태에 저장하거나 사용자에게 표시할 수 있습니다.
-              } catch (error) {
-                console.error('Image analysis failed:', error);
-              }
-
-              // 이미지 전송 후 미리보기 초기화
-              this.previewImage = null;
-            } else {
-              console.error('Image send failed:', res?.error);
-            }
-          });
-        } else if (this.newMessage.trim() !== '') { 
-          // 텍스트 메시지를 전송하는 경우
-          const messageToSend = { text: this.newMessage.trim(), type: 'text' };
-          socket.emit("sendmessage", messageToSend, (res) => {
-            if (res?.ok) {
-              this.messages.push({ text: this.newMessage, fromMe: true, type: 'text' });
-              this.newMessage = ''; // 텍스트 전송 후 입력창 초기화 함
-            } else {
-              console.error('Text send failed:', res?.error);
-            }
-          });
-        }
-      },
-      async sendImageToAnalyze() {
-        const formData = new FormData();
-        formData.append('file', this.selectedFile); // 'this.selectedFile'은 사용자가 선택한 파일 객체입니다.
-
-        try {
-          const response = await axios.post('http://220.69.241.101:8000/analyze/', formData, {
-            headers: {
-              'Content-Type': 'multipart/form-data'
-            },
-          });
-          console.log("분석 결과:", response.data);
-          // 분석 결과를 처리합니다.
-        } catch (error) {
-          console.error('Image analysis failed:', error);
-        }
-      },
-      handleImageSelect(event) {
-        const file = event.target.files[0];
-        if (file) {
-          // 미리보기를 위해 이미지 URL을 생성합니다.
-          this.previewImage = URL.createObjectURL(file);
-          // 선택된 파일을 저장합니다. Base64 인코딩 없이 파일 객체를 직접 사용합니다.
-          this.selectedFile = file;
-        }
-      },
-      showFileInput() {
-        this.$refs.fileInput.click();
-      },
-      clearPreviewImage() {
-        this.previewImage = null;
-      }
-    },
-
-    mounted() {
-    // 서버로부터 메시지를 수신하기 위한 소켓 이벤트 리스너를 설정합니다.
-    socket.on('receiveMessage', (message) => {
-      // message 객체에 fromMe 속성을 추가하여 메시지가 다른 사용자에 의해 보내졌는지 여부를 표시합니다.
-      // 이 예제에서는 모든 수신 메시지가 fromMe: false를 가집니다.
-      const messageWithFromMe = { ...message, fromMe: false };
-      this.messages.push(messageWithFromMe);
-    });
+export default {
+  components: {
+    Modal,
+    UserMessage,
+    OtherMessage
   },
+  props: {
+    channel: Object
+  },
+  data() {
+    return {
+      // 각 채널의 메시지를 저장할 객체
+      channelMessages: {
+        // 예시로 채널 ID 1과 2에 대한 메시지 배열 초기화
+        1: [],
+        2: []
+        // 필요에 따라 다른 채널의 메시지 배열 추가
+      },
+      newMessage: '',
+      selectedFile: null,
+      isModalOpen: false,
+      previewImage: ''
+    };
+  },
+  methods: {
+    addMessage() {
+  if (this.newMessage.trim() || this.selectedFile) {
+    const message = {
+      text: this.newMessage,
+      timestamp: Date.now(),
+      sender: 'user',
+      file: this.selectedFile ? URL.createObjectURL(this.selectedFile) : null,
+    };
+    // 현재 선택된 채널의 메시지 배열에 메시지 추가
+    this.channelMessages[this.channel.id].push(message);
+    this.$emit('new-message', message); // 새 메시지 이벤트 발생
+    this.newMessage = '';
+    this.selectedFile = null;
+    this.scrollToBottom();
+  }
+},
+    handleFileUpload(event) {
+      const file = event.target.files[0];
+      if (file && file.type.startsWith('image/')) {
+        this.selectedFile = file;
+        this.previewImage = URL.createObjectURL(file);
+        this.openModal();
+      }
+    },
+    openModal() {
+      this.isModalOpen = true;
+    },
+    closeModal() {
+      this.isModalOpen = false;
+      this.previewImage = '';
+      this.selectedFile = null;
+    },
+    sendImage() {
+      if (this.selectedFile) {
+        const message = {
+          file: URL.createObjectURL(this.selectedFile),
+          sender: 'user'
+        };
+        // 현재 선택된 채널의 메시지 배열에 이미지 메시지 추가
+        this.channelMessages[this.channel.id].push(message);
+        this.newMessage = ''; // 메시지 입력 초기화
+        this.closeModal();
+        this.scrollToBottom();
+      }
+    },
+    cancelImage() {
+      this.closeModal();
+    },
+    scrollToBottom() {
+      this.$nextTick(() => {
+        const chatMessages = this.$refs.chatMessages;
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+      });
+    },
+    // 마지막 메시지 업데이트 메서드 추가
+    updateLastMessage(channelId, message) {
+      if (!this.channels) {
+        console.error('Channels array is not defined or empty');
+        return;
+      }
+      
+      const channelToUpdate = this.channels.find(channel => channel.id === channelId);
+      if (channelToUpdate) {
+        channelToUpdate.lastMessage = message.text;
+      } else {
+        console.error('Channel not found');
+      }
+    }
+  }
+};
+</script>
 
-  };
-  </script>
+
 
 <style scoped>
-/* 채팅방 스타일 */
-.chat-room {
-    max-width: 500px;
-    height: 700px;
-    /* 채팅방 높이 고정 */
-    display: flex;
-    flex-direction: column;
-    /* 내부 요소를 세로로 배열 */
-    margin: auto;
-    padding: 20px;
-    border: 1px solid #ccc;
-    border-radius: 10px;
+/* ChatRoom 컴포넌트에 대한 스타일링 */
+.chatroom {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 100vh;
+  width: 812px;
+  background-color: white;
+  margin: 0 auto; /* 중앙 정렬 */
 }
-
-/* 채팅 헤더 스타일 */
-.chat-header {
+  
+  .chat-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 43px;
+    background-color: #FFF;
+  }
+  
+  .profile-wrapper {
     display: flex;
     align-items: center;
-    margin-bottom: 10px;
-}
-
-.profile-picture {
+  }
+  
+  .profile-image {
+    border-radius: 50%;
     width: 40px;
     height: 40px;
-    border-radius: 50%;
     margin-right: 10px;
-}
-
-.user-name {
-    font-size: 16px;
-    margin: 0;
-}
-
-/* 메시지 컨테이너 스타일 */
-.message-container {
+    object-fit: contain;
+  }
+  
+  .channel-info {
     flex-grow: 1;
-    /* 사용 가능한 모든 공간을 채움 */
-    overflow-y: auto;
-    padding: 0 10px;
-    /* 내부 여백 조정 */
-}
-
-/* 메시지 스타일 */
-.message {
-    margin-bottom: 10px;
-}
-
-.my-message {
-    background-color: #dcf8c6;
-    padding: 10px;
-    border-radius: 10px;
-    max-width: 70%;
-    word-wrap: break-word;
-    align-self: flex-end;
-    margin-left: auto;
-    margin-top: 10px
-}
-
-.other-message {
-    background-color: #e6e6e6;
-    padding: 10px;
-    border-radius: 10px;
-    max-width: 70%;
-    word-wrap: break-word;
-}
-
-/* 입력 컨테이너 스타일 */
-.input-container {
+  }
+  
+  .channel-nickname {
+    font-size: 16px;
+    font-weight: bold;
+  }
+  
+  .message-form {
     display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 125px;
+    border: 2px solid rgb(45, 168, 55);
+    border-radius: 8px;
+    padding: 8px;
+  }
+  
+  .message-input {
+    flex-grow: 1;
+    margin: 4px;
+    padding: 4px;
+    resize: none;
+    font-size: 14px;
+    border: none;
+    outline: none;
+    border-radius: 4px;
+  }
+  
+  .img-button {
+    display: inline-flex;
     align-items: center;
-    margin-top: auto;
-    /* 하단에 고정 */
-    margin-top: 15px;
-}
-
-.attach-button {
-    padding: 10px 15px;
-    background-color: #007bff;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
+    justify-content: center;
     cursor: pointer;
-    margin-right: 10px;
-}
-
-.file-input {
+  }
+  
+  .photo {
+    width: 24px;
+    height: 24px;
+  }
+  
+  .send-button {
+    align-self: flex-end;
+    margin-top: 8px;
+    padding: 6px 12px;
+    background-color: #04B404;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .box {
+    padding: 0px 20px;
+    background-color:white ;
+    height: 700px;
+    border-radius: 20px;
+    overflow-y: auto; /* 새로운 스타일: 메시지가 많을 경우 스크롤 가능 */
+  }
+  
+  .box::-webkit-scrollbar {
     display: none;
-    /* 파일 입력 창 숨기기 */
-}
-
-.message-input {
-    flex: 1;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    margin-right: 10px;
-}
-
-.send-button {
-    padding: 10px 20px;
-    background-color: #007bff;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
+  }
+  
+  .photo {
+    width: 40px;
+    height: 40px;
     cursor: pointer;
+    margin-bottom: -50px;
+    margin-right: 750px;
+  }
+  .modal-buttons{
+    display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
+  }
+.button-cancel {
+  background-color: #E74C3C;
+  color: white;
+  padding: 10px 20px;
+  margin-left: 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
 }
 
-.send-button:hover {
-    background-color: #0056b3;
+.button-send {
+  background-color: #2ECC71;
+  color: white;
+  padding: 10px 20px;
+  margin-left: 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
 }
 
-/* 이미지 프리뷰 스타일 */
-.image-preview {
-    margin-top: 10px;
-    text-align: center;
+.button:hover {
+  filter: brightness(110%);
+}
+.preview-image {
+  width: 100%; /* 이미지가 모달 안에 꽉 차도록 설정 */
+  height: auto;
+  margin-bottom: 20px; /* 이미지와 버튼 사이 간격 조정 */
 }
 
-.selected-image {
-    max-width: 100px;
-    /* 이미지 미리보기 최대 너비 설정 */
-    cursor: pointer;
-}
-
-.sent-image {
-    max-width: 100%;
-    /* 이미지가 채팅방 너비를 넘지 않도록 함 */
-    height: auto;
-    /* 이미지 높이 자동 조정 */
-    display: block;
-    /* 이미지를 블록 요소로 처리 */
-    margin: 0 auto;
-}
-
-.selected-image-preview {
-    max-width: 50px;
-    /* 미리보기 이미지 크기 조정 */
-    max-height: 50px;
-    /* 높이 제한 추가 */
-    margin-right: 10px;
-    /* 메시지 입력창과의 간격 */
-    cursor: pointer;
-    /* 클릭 가능 표시 */
-}
-
-.message-input-container {
-  flex: 1; /* 컨테이너가 가능한 모든 공간을 차지하도록 함 */
-  display: flex; /* 인풋 박스와 이미지 미리보기를 옆으로 배열 */
-  align-items: center; /* 중앙 정렬 */
-  position: relative; /* 내부의 이미지 위치 조정을 위함 */
-}
-
-.inside-preview-image {
-  position: absolute; /* 컨테이너 내에서 절대 위치 사용 */
-  left: 10px; /* 왼쪽에서부터의 간격 */
-  max-width: 30px; /* 이미지 크기 조정 */
-  max-height: 30px; /* 이미지 높이 조정 */
-}
-
-.message-input {
-  flex: 1; /* 가능한 모든 공간을 차지 */
-  padding-left: 45px; /* 이미지 미리보기와 텍스트 사이의 공간 확보 */
-  /* 기존 스타일 유지 */
-}
-</style>
+  </style>

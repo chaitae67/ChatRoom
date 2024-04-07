@@ -1,4 +1,4 @@
-# chat
+# chatroom
 
 ## Project setup
 ```
