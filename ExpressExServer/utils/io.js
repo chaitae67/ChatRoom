@@ -16,9 +16,9 @@ module.exports = function (io) {
       }
     });
     socket.on("sendmessage", async (messageToSend, cb) => {
+      // 메세지 전송 및 DB 저장
       try {
         const user = await userController.checkUser(socket.id);
-        // chattingController.saveChat 호출 방식 수정
         const newMessage = await chattingController.saveChat(messageToSend, user);
         io.emit("message", newMessage);
         cb({ ok: true });

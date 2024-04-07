@@ -44,6 +44,8 @@
     },
     data() {
       return {
+        userName: null,
+        profilePicture: 'profile.jpg',
         messages: [],
         newMessage: '',
         previewImage: null,
@@ -52,6 +54,16 @@
     },
 
     methods: {
+      askUserName() {
+      this.userName = prompt('당신의 이름을 입력하세요');
+      console.log('User name:', this.userName);
+      // 로그인 이벤트 발생 및 사용자 정보 전달
+      socket.emit("login", this.userName, (res) => {
+        if (res?.ok) {
+          console.log('User logged in:', res.data);
+        }
+      });
+      },
       async sendMessage() {
         if (this.previewImage) {
           // 이미지 메시지를 전송하는 경우
@@ -122,10 +134,8 @@
     },
 
     mounted() {
-    // 서버로부터 메시지를 수신하기 위한 소켓 이벤트 리스너를 설정합니다.
+    this.askUserName();
     socket.on('receiveMessage', (message) => {
-      // message 객체에 fromMe 속성을 추가하여 메시지가 다른 사용자에 의해 보내졌는지 여부를 표시합니다.
-      // 이 예제에서는 모든 수신 메시지가 fromMe: false를 가집니다.
       const messageWithFromMe = { ...message, fromMe: false };
       this.messages.push(messageWithFromMe);
     });
@@ -139,10 +149,8 @@
 .chat-room {
     max-width: 500px;
     height: 700px;
-    /* 채팅방 높이 고정 */
     display: flex;
     flex-direction: column;
-    /* 내부 요소를 세로로 배열 */
     margin: auto;
     padding: 20px;
     border: 1px solid #ccc;
@@ -171,10 +179,8 @@
 /* 메시지 컨테이너 스타일 */
 .message-container {
     flex-grow: 1;
-    /* 사용 가능한 모든 공간을 채움 */
     overflow-y: auto;
     padding: 0 10px;
-    /* 내부 여백 조정 */
 }
 
 /* 메시지 스타일 */
