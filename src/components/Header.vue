@@ -34,7 +34,20 @@
   <!--로그인 헤더 -->
   <div class="header_container">
     <div class="header_top">
-      <div class="login_container">
+      <!--로그인 상태 -->
+      <div v-if="isLoggedIn" class="login_container">
+        <div class="welcome_container">
+          <span style="font-weight:700 ;">{{ nickname }}최태용</span>
+          <span style="margin-right: 10px; ">님 환영합니다!</span>
+        </div>
+        <div class="chat_container">
+          <img src="../assets/chat-square-dots.svg" class="chat_logo">
+          <span style="margin-right: 25px;">채팅하기</span>
+          <span>로그아웃</span>
+        </div>
+      </div>
+      <!--로그아웃 상태 -->
+      <div v-else class="login_container">
         <button class="login_text" @click="openLoginModal">
           로그인 / 회원가입
         </button>
@@ -43,7 +56,7 @@
 
     <header class="header">
       <div class="logo_container">
-        <img @click="navigateToMain" src="../assets/buybye.svg" style="cursor: pointer;" alt="없음" class="logo"  />
+        <img @click="navigateToMain" src="../assets/buybye.svg" style="cursor: pointer;" alt="없음" class="logo" />
         <form>
           <div class="search_container">
             <div class="search_box">
@@ -88,10 +101,12 @@ export default {
     return {
       showLoginModal: false, // 모달 창을 보여주는 상태 변수
       isHovered: '', // 현재 호버된 버튼의 종류를 저장
+      isLoggedIn: false,
+      nickname: '',
     };
   },
-  mounted(){
-    this.$emit('headerHeightUpdated',this.$el.offsetHeight);
+  mounted() {
+    this.$emit('headerHeightUpdated', this.$el.offsetHeight);
   },
   methods: {
     openLoginModal() {
@@ -103,8 +118,8 @@ export default {
     hoverBackground(buttonType) {
       this.isHovered = buttonType; // 버튼 타입에 따라 현재 호버된 버튼을 설정
     },
-    navigateToMain(){
-        this.$router.push('/Main');  
+    navigateToMain() {
+      this.$router.push('/Main');
     },
   },
 };
@@ -142,7 +157,8 @@ p {
   right: 0;
   margin-left: auto;
   margin-right: auto;
-  width: 100%; /* 혹은 최대 너비가 정해져 있다면 그 값을 사용 */
+  width: 100%;
+  /* 혹은 최대 너비가 정해져 있다면 그 값을 사용 */
   transition: top 0.3s;
   z-index: 100;
 }
@@ -352,13 +368,13 @@ p {
 }
 
 .list_icon {
-  width: 22px;
-  height: 22px;
+  width: 30px;
+  height: 30px;
   cursor: pointer;
 }
 
 .list_button {
-  font-size: 15px;
+  font-size: 18px;
   border: none;
   background-color: transparent;
   cursor: pointer;
@@ -399,5 +415,23 @@ p {
   display: flex;
   align-items: center;
   margin-bottom: 20px;
+}
+
+.chat_logo {
+  margin-left: 30px;
+  margin-right: 7px;
+  width: 22px;
+  height: 22px;
+
+}
+
+.chat_container {
+  display: flex;
+  cursor: pointer;
+  margin-right: 5px;
+}
+
+.welcome_container {
+  margin-right: auto;
 }
 </style>

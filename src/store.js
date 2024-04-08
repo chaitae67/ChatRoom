@@ -1,16 +1,21 @@
-import Vue from 'vue';
-import Vuex from 'vuex';
+// store/index.js
+import { createStore } from 'vuex';
 
-Vue.use(Vuex);
-
-export default new Vuex.Store({
-  state: {
-    
+export default createStore({
+  state() {
+    return {
+      user: {
+        id: '',
+        nickname: ''
+      }
+    };
   },
   mutations: {
-    
+    userinfo(state, userData) {
+      state.user.id = userData.id;
+      state.user.nickname = userData.nickname;
+    }
   },
   actions: {
-    
   }
 });
