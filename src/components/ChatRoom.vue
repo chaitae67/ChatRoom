@@ -47,6 +47,7 @@
 import Modal from './Modal.vue';
 import UserMessage from './UserMessage.vue';
 import OtherMessage from './OtherMessage.vue';
+import { io } from 'socket.io-client';
 
 export default {
   components: {
@@ -59,36 +60,48 @@ export default {
   },
   data() {
     return {
-      // 각 채널의 메시지를 저장할 객체
       channelMessages: {
         1: [],
         2: []
-        // 필요에 따라 다른 채널의 메시지 배열 추가
+      },
+      lastMessages: {
+        1: null,
+        2: null
       },
       newMessage: '',
       selectedFile: null,
       isModalOpen: false,
       previewImage: '',
-      lastMessage: '' // 마지막 보낸 메시지를 저장할 변수 추가
+      lastMessage: '',
+      
     };
   },
   methods: {
     addMessage() {
       if (this.newMessage.trim() || this.selectedFile) {
-        const message = {
+        const messageData = {
           text: this.newMessage,
           timestamp: Date.now(),
           sender: 'user',
           file: this.selectedFile ? URL.createObjectURL(this.selectedFile) : null,
         };
-        this.channelMessages[this.channel.id].push(message);
-        this.$emit('new-message', message);
+
+        // WebSocket을 통해 서버로 메시지 전송
+        this.socket.emit('message', messageData);
+
+        // 메시지를 자체적으로 표시하는 대신 소켓에서 받은 메시지를 기다림
+        this.channelMessages[this.channel.id].push(messageData);
+
         this.newMessage = '';
         this.selectedFile = null;
         this.scrollToBottom();
-        this.lastMessage = message.text; // 마지막 보낸 메시지 업데이트
+        this.lastMessage = messageData.text;
+
+        // 마지막 메시지를 업데이트
+        this.updateLastMessage(messageData);
       }
     },
+    
     handleFileUpload(event) {
       const file = event.target.files[0];
       if (file && file.type.startsWith('image/')) {
@@ -107,15 +120,24 @@ export default {
     },
     sendImage() {
       if (this.selectedFile) {
-        const message = {
+        const messageData = {
           file: URL.createObjectURL(this.selectedFile),
           sender: 'user'
         };
-        this.channelMessages[this.channel.id].push(message);
-        this.newMessage = ''; // 메시지 입력 초기화
+        
+        // WebSocket을 통해 서버로 이미지 메시지 전송
+        this.socket.emit('message', messageData);
+
+        // 메시지를 자체적으로 표시하는 대신 소켓에서 받은 메시지를 기다림
+        this.channelMessages[this.channel.id].push(messageData);
+
+        this.newMessage = '';
         this.closeModal();
         this.scrollToBottom();
-        this.lastMessage = 'Image'; // 마지막 보낸 메시지 업데이트 (이미지 전송인 경우)
+        this.lastMessage = 'Image';
+
+        // 마지막 메시지를 업데이트
+        this.updateLastMessage(messageData);
       }
     },
     cancelImage() {
@@ -126,10 +148,32 @@ export default {
         const chatMessages = this.$refs.chatMessages;
         chatMessages.scrollTop = chatMessages.scrollHeight;
       });
+    },
+    updateLastMessage(message) {
+      // 마지막 메시지 업데이트
+      this.lastMessage = message.text;
     }
+  },
+  mounted() {
+    // VueSocketIO 대신 socket.io-client를 사용하여 소켓 초기화
+    this.socket = io('http://localhost:8080');
+
+    // 서버로부터 받은 메시지를 처리하는 부분
+    this.socket.on('message', (messageData) => {
+      this.channelMessages[this.channel.id].push(messageData);
+      this.scrollToBottom();
+
+      // 받은 메시지를 통해 마지막 메시지를 업데이트
+      this.updateLastMessage(messageData);
+      
+      // 새로운 메시지를 받으면 해당 메시지를 미리보기로 표시
+      this.lastMessages[this.channel.id] = messageData.text;
+    });
   }
 };
 </script>
+
+
 
 <style scoped>
 /* ChatRoom 컴포넌트에 대한 스타일링 */
