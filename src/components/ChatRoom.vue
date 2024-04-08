@@ -61,7 +61,6 @@ export default {
     return {
       // 각 채널의 메시지를 저장할 객체
       channelMessages: {
-        // 예시로 채널 ID 1과 2에 대한 메시지 배열 초기화
         1: [],
         2: []
         // 필요에 따라 다른 채널의 메시지 배열 추가
@@ -69,26 +68,27 @@ export default {
       newMessage: '',
       selectedFile: null,
       isModalOpen: false,
-      previewImage: ''
+      previewImage: '',
+      lastMessage: '' // 마지막 보낸 메시지를 저장할 변수 추가
     };
   },
   methods: {
     addMessage() {
-  if (this.newMessage.trim() || this.selectedFile) {
-    const message = {
-      text: this.newMessage,
-      timestamp: Date.now(),
-      sender: 'user',
-      file: this.selectedFile ? URL.createObjectURL(this.selectedFile) : null,
-    };
-    // 현재 선택된 채널의 메시지 배열에 메시지 추가
-    this.channelMessages[this.channel.id].push(message);
-    this.$emit('new-message', message); // 새 메시지 이벤트 발생
-    this.newMessage = '';
-    this.selectedFile = null;
-    this.scrollToBottom();
-  }
-},
+      if (this.newMessage.trim() || this.selectedFile) {
+        const message = {
+          text: this.newMessage,
+          timestamp: Date.now(),
+          sender: 'user',
+          file: this.selectedFile ? URL.createObjectURL(this.selectedFile) : null,
+        };
+        this.channelMessages[this.channel.id].push(message);
+        this.$emit('new-message', message);
+        this.newMessage = '';
+        this.selectedFile = null;
+        this.scrollToBottom();
+        this.lastMessage = message.text; // 마지막 보낸 메시지 업데이트
+      }
+    },
     handleFileUpload(event) {
       const file = event.target.files[0];
       if (file && file.type.startsWith('image/')) {
@@ -111,11 +111,11 @@ export default {
           file: URL.createObjectURL(this.selectedFile),
           sender: 'user'
         };
-        // 현재 선택된 채널의 메시지 배열에 이미지 메시지 추가
         this.channelMessages[this.channel.id].push(message);
         this.newMessage = ''; // 메시지 입력 초기화
         this.closeModal();
         this.scrollToBottom();
+        this.lastMessage = 'Image'; // 마지막 보낸 메시지 업데이트 (이미지 전송인 경우)
       }
     },
     cancelImage() {
@@ -126,26 +126,10 @@ export default {
         const chatMessages = this.$refs.chatMessages;
         chatMessages.scrollTop = chatMessages.scrollHeight;
       });
-    },
-    // 마지막 메시지 업데이트 메서드 추가
-    updateLastMessage(channelId, message) {
-      if (!this.channels) {
-        console.error('Channels array is not defined or empty');
-        return;
-      }
-      
-      const channelToUpdate = this.channels.find(channel => channel.id === channelId);
-      if (channelToUpdate) {
-        channelToUpdate.lastMessage = message.text;
-      } else {
-        console.error('Channel not found');
-      }
     }
   }
 };
 </script>
-
-
 
 <style scoped>
 /* ChatRoom 컴포넌트에 대한 스타일링 */
@@ -187,6 +171,7 @@ export default {
   
   .channel-nickname {
     font-size: 16px;
+    font-weight: bold;
   }
   
   .message-form {

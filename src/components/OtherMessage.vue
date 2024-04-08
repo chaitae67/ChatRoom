@@ -13,7 +13,10 @@ export default {
   props: ['message'],
   computed: {
     formattedTimestamp() {
-      return new Date(this.message.timestamp).toLocaleTimeString();
+      return new Date(this.message.timestamp).toLocaleTimeString('ko-KR', {
+        hour: '2-digit',
+        minute: '2-digit',
+      });
     },
   },
 };
