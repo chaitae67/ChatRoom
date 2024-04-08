@@ -1,7 +1,7 @@
 <template>
     <div class="login_container">
       <div class="logo_container">
-        <img src="../assets/BB.svg" style="width: 80px; height: 80px;">
+        <img @click="navigateToMain" src="../assets/BB.svg" style="width: 80px; height: 80px; cursor: pointer;">
       </div>
       <div class="login_text">
         ID/PW 로그인 
@@ -51,11 +51,14 @@ export default {
       })
       .then(response => {
         console.log('로그인 성공:', response);
-        //this.$router.push('./MainPage');
+        this.$router.push('/Main');
       })
       .catch(error => {
         console.error('로그인 실패:', error);
       });
+    },
+    navigateToMain(){
+      this.$router.push('/Main');  
     }
   }
 };

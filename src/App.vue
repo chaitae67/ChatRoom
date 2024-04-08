@@ -38,7 +38,10 @@ export default {
 };
 </script>
 
-<style scoped>  
+<style> 
+body{
+  margin: 0;
+}
 * {
   font-family: 'Pretendard Variable';
 }
