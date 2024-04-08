@@ -16,7 +16,7 @@
         <span style="padding:0px 5px">|</span>
         <span class="search_text">비밀번호 찾기</span>
       </div>
-      <div @click="login" class="login_button" >
+      <div @click="performLogin" class="login_button" >
         로그인
       </div>
       <div class="signup_box">
@@ -27,7 +27,7 @@
   </template>
   
 <script>
-import axios from 'axios';
+import { mapState,mapActions } from 'vuex';
 
 export default {
   data() {
@@ -37,29 +37,34 @@ export default {
       userPassword: '',
     };
   },
+  computed:{
+    ...mapState(['userId', 'nickname'])
+  },
   methods: {
+    ...mapActions(['login']),
+
+    //로그인 성공시 메인페이지로 리다이렉션
+    performLogin(){
+      this.login({
+        userId: this.userId,
+        userPassword: this.userPassword
+      }).then(() => {
+      this.$router.push('/Main'); 
+    }).catch(error => {
+
+      console.error('로그인 실패', error);
+    });
+    },
+
     getPwPng(num) {
       return num == 0 ? require('../assets/ico_join_pw_on.png') : require('../assets/ico_join_pw_off.png');
     },
     handleSignup() {
       this.$router.push('./SignUp');
     },
-    login() {
-      axios.post('https://bffff47d-e1e7-4df4-b2b7-a2e0f871fe53.mock.pstmn.io', {
-        userId: this.userId,
-        password: this.userPassword,
-      })
-      .then(response => {
-        console.log('로그인 성공:', response);
-        this.$router.push('/Main');
-      })
-      .catch(error => {
-        console.error('로그인 실패:', error);
-      });
-    },
     navigateToMain(){
       this.$router.push('/Main');  
-    }
+    },
   }
 };
 </script>

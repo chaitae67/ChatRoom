@@ -43,7 +43,7 @@
         <div class="chat_container">
           <img src="../assets/chat-square-dots.svg" class="chat_logo">
           <span style="margin-right: 25px;">채팅하기</span>
-          <span>로그아웃</span>
+          <span @click="performLogout">로그아웃</span>
         </div>
       </div>
       <!--로그아웃 상태 -->
@@ -95,20 +95,32 @@
 </template>
 
 <script>
+import { mapState,mapActions } from 'vuex';
+
 export default {
   name: 'Hearder',
   data() {
     return {
       showLoginModal: false, // 모달 창을 보여주는 상태 변수
       isHovered: '', // 현재 호버된 버튼의 종류를 저장
-      isLoggedIn: false,
       nickname: '',
     };
   },
+  computed:{
+    ...mapState(['isLoggedIn','nickname'])
+  },
   mounted() {
-    this.$emit('headerHeightUpdated', this.$el.offsetHeight);
+
   },
   methods: {
+    ...mapActions(['logout']),
+
+    performLogout(){
+      this.logout().then(() => {
+        this.$router.push('/LogIn');
+      });
+    },
+
     openLoginModal() {
       this.showLoginModal = true; // 모달 창을 보여주는 메소드
     },
