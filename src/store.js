@@ -23,10 +23,10 @@ export default createStore({
     }
   },
   actions: {
-    login({commit}, {userId,nickname}) {
+    login({commit}, {userId,userPassword}) {
       axios.post('https://bffff47d-e1e7-4df4-b2b7-a2e0f871fe53.mock.pstmn.io', {
         userId,
-        nickname,
+        userPassword,
       })
       .then(response => {
         console.log('로그인 성공:', response);
