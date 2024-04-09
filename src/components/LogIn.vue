@@ -43,7 +43,6 @@ computed:{
 methods: {
   ...mapActions(['login']),
 
- 
     performLogin() {
       // 입력 필드 검증
       if (!this.userId.trim()) {
@@ -72,7 +71,10 @@ methods: {
         }
       });
   },
-
+  
+  togglePasswordVisibility(){
+      this.showPassword = !this.showPassword;
+  },
   getPwPng(num) {
     return num == 0 ? require('../assets/ico_join_pw_on.png') : require('../assets/ico_join_pw_off.png');
   },
