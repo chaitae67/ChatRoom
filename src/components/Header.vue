@@ -431,7 +431,7 @@ p {
 
 .chat_logo {
   margin-left: 30px;
-  margin-right: 7px;
+  margin-right: 5px;
   width: 22px;
   height: 22px;
 
