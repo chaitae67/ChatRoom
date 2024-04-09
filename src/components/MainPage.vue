@@ -89,7 +89,7 @@ export default {
   padding: 14px 2rem;
   display: inline-block;
   text-align: center;
-  margin-right: 2rem;
+  margin-right:2.5rem;
 }
 .button_text{
   display: inline-block;

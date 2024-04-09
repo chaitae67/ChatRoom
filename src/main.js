@@ -5,12 +5,14 @@ import App from './App.vue'
 import socket from "../server.js";
 import router from './router'
 import Toast from 'vue-toast-notification';
-import 'vue-toast-notification/dist/theme-default.css';
+import 'vue-toastification/dist/index.css';
 import store from './store';
 
 const app = createApp(App);
+const options = {};
+
 app.use(router);
-app.use(Toast);
+app.use(Toast, options);
 app.use(store);
 
 app.config.globalProperties.$socket = socket;
