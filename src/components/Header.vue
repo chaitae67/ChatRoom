@@ -1,5 +1,5 @@
 <template>
-  <!--로그인 모달 창ㅋㅋ-->
+  <!--로그인 모달 창-->
   <div class="Modal_background" v-if="showLoginModal">
     <div class="Modal_container">
       <button class="closemodal_icon" @click="closeLoginModal">
@@ -9,24 +9,18 @@
       <div class="title_box">필요한 건 BUY! 필요없는 건 BYE!</div>
       <div class="subtitle_box">쉽고 빠르게 시작하세요</div>
       <div class="button_container">
-        <button class="login_button" 
-        @mouseover="hoverBackground('kakao')" 
-        @mouseleave="hoverBackground('')" 
-        :style="isHovered === 'kakao' ? { backgroundColor: 'rgb(60, 52, 31)', color: 'white' } : {}">
+        <button class="login_button" @mouseover="hoverBackground('kakao')" @mouseleave="hoverBackground('')"
+          :style="isHovered === 'kakao' ? { backgroundColor: 'rgb(60, 52, 31)', color: 'white' } : {}">
           <div class="button_background"></div>
           카카오로 이용하기
         </button>
-        <button class="login_button" 
-        @mouseover="hoverBackground('naver')" 
-        @mouseleave="hoverBackground('')" 
-        :style="isHovered === 'naver' ? { backgroundColor: 'rgb(3, 199, 90)',color: 'white' } : {}">
+        <button class="login_button" @mouseover="hoverBackground('naver')" @mouseleave="hoverBackground('')"
+          :style="isHovered === 'naver' ? { backgroundColor: 'rgb(3, 199, 90)', color: 'white' } : {}">
           <div class="naver_button button_background"></div>
           네이버로 이용하기
         </button>
-        <a class="id_button" href="LogIn" 
-        @mouseover="hoverBackground('idpw')" 
-        @mouseleave="hoverBackground('')" 
-        :style="isHovered === 'idpw' ? { backgroundColor: 'rgb(0,0,0)',color: 'white' } : {}">
+        <a class="id_button" href="LogIn" @mouseover="hoverBackground('idpw')" @mouseleave="hoverBackground('')"
+          :style="isHovered === 'idpw' ? { backgroundColor: 'rgb(0,0,0)', color: 'white' } : {}">
           <div class="basic_button"></div>
           ID/PW로 이용하기
         </a>
@@ -38,71 +32,95 @@
     </div>
   </div>
   <!--로그인 헤더 -->
-  <div class="header_top">
-    <div class="login_container">
-      <button class="login_text" @click="openLoginModal">
-        로그인 / 회원가입
-      </button>
-    </div>
-  </div>
-
-  <header class="header">
-    <div class="logo_container">
-      <img src="../assets/buybye.svg" alt="없음" class="logo" />
-      <form>
-        <div class="search_container">
-          <div class="search_box">
-            <input
-              class="input_box"
-              type="text"
-              name="search"
-              placeholder="검색어를 입력하세요"
-            />
-            <img src="../assets/search.svg" class="search_icon" />
-          </div>
+  <div class="header_container">
+    <div class="header_top">
+      <!--로그인 상태 -->
+      <div v-if="isLoggedIn" class="login_container">
+        <div class="welcome_container">
+          <span style="font-weight:700 ;">{{ nickname }}</span>
+          <span style="margin-right: 10px; ">님 환영합니다!</span>
         </div>
-      </form>
-      <div class="list_container">
-        <div class="list_box">
-          <div class="list">
-            <img src="../assets/bag.svg" class="list_icon" />
-            <button class="list_button">중고거래</button>
-          </div>
+        <div class="chat_container">
+          <img src="../assets/chat-square-dots.svg" class="chat_logo">
+          <span style="margin-right: 25px;">채팅하기</span>
+          <span @click="performLogout">로그아웃</span>
         </div>
-        <div class="list_box">
-          <div class="list">
-            <img src="../assets/coin.svg" class="list_icon" />
-            <button class="list_button">판매하기</button>
-          </div>
-        </div>
-        <div class="list_box">
-          <div class="list">
-            <img src="../assets/shop.svg" class="list_icon" />
-            <button class="list_button">내상점</button>
-          </div>
-        </div>
+      </div>
+      <!--로그아웃 상태 -->
+      <div v-else class="login_container">
+        <button class="login_text" @click="openLoginModal">
+          로그인 / 회원가입
+        </button>
       </div>
     </div>
 
-    <div class="categoly_container">
-      <img
-        src="../assets/list.svg"
-        alt="없음"
-        style="width: 25px; height: 25px"
-      />
-    </div>
-  </header>
+    <header class="header">
+      <div class="logo_container">
+        <img @click="navigateToMain" src="../assets/buybye.svg" style="cursor: pointer;" alt="없음" class="logo" />
+        <form>
+          <div class="search_container">
+            <div class="search_box">
+              <input class="input_box" type="text" name="search" placeholder="검색어를 입력하세요" />
+              <img src="../assets/search.svg" class="search_icon" />
+            </div>
+          </div>
+        </form>
+        <div class="list_container">
+          <div class="list_box">
+            <div class="list">
+              <img src="../assets/bag.svg" class="list_icon" />
+              <button class="list_button">중고거래</button>
+            </div>
+          </div>
+          <div class="list_box">
+            <div class="list">
+              <img src="../assets/coin.svg" class="list_icon" />
+              <button class="list_button">판매하기</button>
+            </div>
+          </div>
+          <div class="list_box">
+            <div class="list">
+              <img src="../assets/shop.svg" class="list_icon" />
+              <button class="list_button">내상점</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="categoly_container">
+        <img src="../assets/list.svg" alt="없음" style="width: 25px; height: 25px" />
+      </div>
+    </header>
+  </div>
 </template>
 
 <script>
+import { mapState,mapActions } from 'vuex';
+
 export default {
+  name: 'Header',
   data() {
     return {
       showLoginModal: false, // 모달 창을 보여주는 상태 변수
       isHovered: '', // 현재 호버된 버튼의 종류를 저장
+      
     };
   },
+  computed:{
+    ...mapState(['isLoggedIn','nickname'])
+  },
+  mounted() {
+
+  },
   methods: {
+    ...mapActions(['logout']),
+
+    performLogout(){
+      this.logout().then(() => {
+        this.$router.push('/LogIn');
+      });
+    },
+
     openLoginModal() {
       this.showLoginModal = true; // 모달 창을 보여주는 메소드
     },
@@ -111,7 +129,10 @@ export default {
     },
     hoverBackground(buttonType) {
       this.isHovered = buttonType; // 버튼 타입에 따라 현재 호버된 버튼을 설정
-    }
+    },
+    navigateToMain() {
+      this.$router.push('/Main');
+    },
   },
 };
 </script>
@@ -128,6 +149,7 @@ a {
   font-size: 14px;
 
 }
+
 p {
   display: block;
   margin-block-start: 1em;
@@ -137,9 +159,21 @@ p {
   width: 100%;
   border-top: 1px solid rgb(229, 229, 229);
   padding-top: 1rem;
-  text-align: center; 
+  text-align: center;
 }
 
+.header_container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+  /* 혹은 최대 너비가 정해져 있다면 그 값을 사용 */
+  transition: top 0.3s;
+  z-index: 100;
+}
 
 .Modal_background {
   background: rgba(0, 0, 0, 0.6);
@@ -153,6 +187,7 @@ p {
   justify-content: center;
   display: flex;
 }
+
 .Modal_container {
   background: rgb(247, 247, 247);
   width: 420px;
@@ -162,6 +197,7 @@ p {
   position: relative;
   padding-top: 40px;
 }
+
 .closemodal_icon {
   position: absolute;
   top: 5px;
@@ -170,12 +206,14 @@ p {
   cursor: pointer;
   border: none;
 }
+
 .modal_logo {
   height: 60px;
   width: 60px;
   display: block;
   margin: auto auto 20px;
 }
+
 .title_box {
   font-size: 20px;
   line-height: 1.5;
@@ -183,15 +221,18 @@ p {
   text-align: center;
   font-weight: bold;
 }
+
 .subtitle_box {
   line-height: 1.5;
   margin-bottom: 35px;
   text-align: center;
   font-weight: normal;
 }
+
 .button_container {
   padding: 0px 70px;
 }
+
 .login_button {
   width: 100%;
   height: 38px;
@@ -206,6 +247,7 @@ p {
   font-weight: medium;
   cursor: pointer;
 }
+
 .id_button {
   display: flex;
   -webkit-box-align: center;
@@ -220,11 +262,14 @@ p {
   border-radius: 4px;
   margin-bottom: 12px;
   position: relative;
-  padding: 0; /* 내부 패딩 제거 */
-  text-decoration: none; /* 밑줄 제거 */
+  padding: 0;
+  /* 내부 패딩 제거 */
+  text-decoration: none;
+  /* 밑줄 제거 */
   font-size: 13.3px;
 }
-.button_background{
+
+.button_background {
   position: absolute;
   top: calc(50% - 12px);
   left: 35px;
@@ -233,26 +278,33 @@ p {
   background-size: cover;
   background-repeat: no-repeat;
 }
+
 .kakao_button {
   background-image: "~@/asserts/kakao.png";
 }
+
 .naver_button {
   background-image: "../assets/naver.png";
 }
+
 .basic_button {
   background-image: "../assets/basic.svg";
 }
-.modal_footer{
+
+.modal_footer {
   padding: 2.5rem 2rem 1.5rem;
   font-size: 11px;
   line-height: 1.5;
   color: rgb(153, 153, 153);
 }
+
 .header_top {
   border-bottom: 1px solid rgb(238, 238, 238);
   height: 40px;
   align-items: center;
   display: flex;
+  background: white;
+
 }
 
 .login_container {
@@ -328,13 +380,13 @@ p {
 }
 
 .list_icon {
-  width: 22px;
-  height: 22px;
+  width: 30px;
+  height: 30px;
   cursor: pointer;
 }
 
 .list_button {
-  font-size: 15px;
+  font-size: 18px;
   border: none;
   background-color: transparent;
   cursor: pointer;
@@ -377,4 +429,21 @@ p {
   margin-bottom: 20px;
 }
 
+.chat_logo {
+  margin-left: 30px;
+  margin-right: 7px;
+  width: 22px;
+  height: 22px;
+
+}
+
+.chat_container {
+  display: flex;
+  cursor: pointer;
+  margin-right: 5px;
+}
+
+.welcome_container {
+  margin-right: auto;
+}
 </style>

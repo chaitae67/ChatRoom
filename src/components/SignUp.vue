@@ -1,7 +1,7 @@
 <template>
     <div class="signup_container">
         <div class="logo_container">
-            <img src="../assets/BB.svg" style="width: 80px; height: 80px;">
+            <img @click="navigateToMain" src="../assets/BB.svg" style="width: 80px; height: 80px; cursor: pointer;">
         </div>
         <div class="signup_text">회원가입</div>
         <div>
@@ -46,6 +46,9 @@ export default {
         };
     },
     methods: {
+        navigateToMain(){
+        this.$router.push('/Main');  
+        },
         async checkFieldsAndSubmit() {
             // 비밀번호 일치 여부 확인
             if (this.password !== this.confirmPassword) {
@@ -58,7 +61,6 @@ export default {
                 this.errorMessage = ''; // 모든 것이 유효하면 에러 메시지 클리어
             } else {
                 this.errorMessage = '모든 필드를 올바르게 채워주세요.'; // 필드 누락에 대한 메시지 설정
-                
             }
         },
         allFieldsFilled() {
@@ -78,6 +80,7 @@ export default {
             try {
                 const response = await axios.post('http://220.69.241.101:3001/signup', formData);
                 alert('회원가입이 성공적으로 완료되었습니다.');
+                this.$router.push('/LogIn');
             } catch (error) {
                 console.error('회원가입 실패:', error);
                 this.errorMessage = '회원가입 과정에서 오류가 발생했습니다.'; // 서버 오류에 대한 메시지 설정
@@ -95,7 +98,7 @@ export default {
 
 .signup_container {
     width: 400px;
-    margin: 0px auto 0px;
+    margin: 130px auto 0px;
 }
 
 .logo_container {

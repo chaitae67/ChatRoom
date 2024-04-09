@@ -47,6 +47,7 @@
         userName: null,
         profilePicture: 'profile.jpg',
         messages: [],
+        receive: [],
         newMessage: '',
         previewImage: null,
         selectedFile: null,
@@ -133,13 +134,27 @@
       }
     },
 
+    // Chat 컴포넌트의 script 부분 중 mounted() 메서드
     mounted() {
-    this.askUserName();
-    socket.on('receiveMessage', (message) => {
-      const messageWithFromMe = { ...message, fromMe: false };
-      this.messages.push(messageWithFromMe);
-    });
-  },
+      this.askUserName();
+      socket.on('receiveMessage', (message) => {
+        console.log('Received message:', message);
+        // 여기서 메시지를 receive 배열에 추가합니다.
+        // fromMe 속성은 메시지가 현재 사용자에게서 온 것인지 판단하기 위해 사용됩니다.
+        // 이 예시에서는 fromMe 속성을 설정할 필요가 없을 수도 있습니다.
+        this.receive.push({
+          chat: message.chat,
+          user: message.user,
+          _id: message._id,
+          createdAt: message.createdAt,
+          updatedAt: message.updatedAt,
+          // fromMe: message.user.userName === this.userName,
+          type: 'text', // 예시에서는 타입을 직접 설정하고 있지 않으므로, 기본값으로 'text'를 사용합니다.
+          image: message.image // 이미지 메시지가 있는 경우를 대비해 추가
+        });
+      });
+    },
+
 
   };
   </script>

@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken');
 const saltRounds = 10;
 
 exports.login = (req, res) => {
-  const { userId, password } = req.body;
+  const { userId, userPassword } = req.body;
 
   // 사용자 정보 조회
   const query = `SELECT * FROM User WHERE personalID = ?`;
@@ -24,7 +24,7 @@ exports.login = (req, res) => {
     const user = results[0];
 
     // 비밀번호 해시와 비교
-    bcrypt.compare(password, user.password, (err, result) => {
+    bcrypt.compare(userPassword, user.password, (err, result) => {
       if (err) {
         console.error("Error comparing passwords: " + err.message);
         res.status(500).json({ error: "Internal server error" });
@@ -38,11 +38,19 @@ exports.login = (req, res) => {
       }
 
       // 로그인 성공: JWT 토큰 생성 및 반환
-      const payload = { userId: user.ID };
+      const payload = { userId: user.personalID, nickname: user.nickname };
       const secretKey = process.env.JWT_SECRET;
       const options = { expiresIn: '1h' };
       const token = jwt.sign(payload, secretKey, options);
-      res.status(200).json({ token });
+
+      // 사용자 데이터를 함께 보냄
+      const response = {
+        userId: user.personalID,
+        nickname: user.nickname,
+        token: token // 토큰도 함께 전달
+      };
+      console.log("User logged in:", response);
+      res.status(200).json({ response });
     });
   });
 };
