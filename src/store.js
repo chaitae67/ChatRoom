@@ -24,22 +24,25 @@ export default createStore({
   },
   actions: {
     login({ commit }, { userId, userPassword }) {
-      axios.post('http://220.69.241.101:3001/login', {
-        userId,
-        userPassword,
-      })
-      .then(response => {
-        console.log('로그인 성공:', response);
-        const userData = {
-          userId: response.data.response.userId,
-          nickname: response.data.response.nickname,
-        };
-        console.log('userData:', userData);
-        commit('userinfo', userData);
-      })
-      .catch(error => {
-        console.error('로그인 실패:', error);
-        throw error;
+      return new Promise((resolve, reject) => { // Promise 생성
+        axios.post('http://220.69.241.101:3001/login', {
+          userId,
+          userPassword,
+        })
+        .then(response => {
+          // 로그인 성공 처리
+          console.log('로그인 성공:', response);
+          const userData = {
+            userId: response.data.response.userId,
+            nickname: response.data.response.nickname,
+          };
+          commit('userinfo', userData);
+          resolve(response); // 성공적으로 완료
+        })
+        .catch(error => {
+          console.error('로그인 실패:', error);
+          reject(error); // 실패 처리
+        });
       });
     },
 

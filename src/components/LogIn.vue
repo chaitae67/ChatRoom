@@ -20,7 +20,7 @@
       로그인
     </div>
     <div class="signup_box">
-      <span class="first">처음이신가요? </span>
+        <span class="first">처음이신가요? </span>
       <span @click="handleSignup" class="signup_text">회원가입</span>
     </div>
   </div>
@@ -44,16 +44,33 @@ methods: {
   ...mapActions(['login']),
 
  
-  performLogin(){
-    this.login({
-      userId: this.userId,
-      userPassword: this.userPassword
-    }).then(() => {
-    this.$router.push('/Main'); 
-  }).catch(error => {
+    performLogin() {
+      // 입력 필드 검증
+      if (!this.userId.trim()) {
+        alert ('아이디를 입력해주세요.');
+        return;
+      }
+      if (!this.userPassword.trim()) {
+        alert ('비밀번호를 입력해주세요.');
+        return;
+      }
 
-    console.error('로그인 실패', error);
-  });
+      this.login({
+        userId: this.userId,
+        userPassword: this.userPassword
+      }).then(() => {
+        // 로그인 성공 시 메인 페이지로 리다이렉션
+        this.$router.push('/Main');
+      }).catch(error => {
+        // 비밀번호가 틀린 경우(예: HTTP 상태 코드 401)의 처리가 필요
+        // 실제 서버 응답에 맞게 조정해야 할 수 있음
+        if (error.message === 'Unauthorized') {
+          alert('비밀번호가 일치하지 않습니다.');
+        } else {
+          // 기타 오류 처리
+          alert('비밀번호가 일치하지 않습니다.', error);
+        }
+      });
   },
 
   getPwPng(num) {
@@ -65,7 +82,7 @@ methods: {
   navigateToMain(){
     this.$router.push('/Main');  
   },
-}
+  }
 };
 </script>
 
