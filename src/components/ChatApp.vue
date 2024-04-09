@@ -60,35 +60,32 @@ export default {
     handleChannelSelected(channel) {
       this.selectedChannel = channel;
     },
-addNewMessage(newMessage) {
-  if (this.selectedChannel) {
-    // 현재 선택된 채널에 대한 메시지만 저장
-    const messages = [...this.channelMessages[this.selectedChannel.id] || []];
-    messages.push({
-      id: messages.length + 1, // id 값은 예시입니다. 실제 구현에서는 고유한 값을 사용해야 합니다.
-      text: newMessage.text,
-      timestamp: Date.now(), // 변경된 부분
-      sender: 'user',
-    });
-    // this.$set(this.channelMessages, this.selectedChannel.id, messages);
-    // 위 줄을 아래와 같이 변경
-    this.channelMessages[this.selectedChannel.id] = messages;
+    addNewMessage(newMessage) {
+      if (this.selectedChannel) {
+        // 현재 선택된 채널에 대한 메시지만 저장
+        const messages = [...this.channelMessages[this.selectedChannel.id] || []];
+        messages.push({
+          id: messages.length + 1, // id 값은 예시입니다. 실제 구현에서는 고유한 값을 사용해야 합니다.
+          text: newMessage.text,
+          timestamp: Date.now(), // 변경된 부분
+          sender: 'user',
+        });
+        this.channelMessages[this.selectedChannel.id] = messages;
 
-    // 마지막 메시지 정보 업데이트
-    const updatedChannels = this.channels.map(channel => {
-      if (channel.id === this.selectedChannel.id) {
-        return {
-          ...channel,
-          lastMessage: newMessage.text,
-          lastActive: new Date().toLocaleTimeString(),
-        };
+        // 마지막 메시지 정보 업데이트
+        const updatedChannels = this.channels.map(channel => {
+          if (channel.id === this.selectedChannel.id) {
+            return {
+              ...channel,
+              lastMessage: newMessage.text,
+              lastActive: new Date().toLocaleTimeString(),
+            };
+          }
+          return channel;
+        });
+        this.channels = updatedChannels;
       }
-      return channel;
-    });
-    this.channels = updatedChannels;
-  }
-},
-
+    },
   },
 }
 </script>
@@ -96,28 +93,29 @@ addNewMessage(newMessage) {
 <style scoped>
 .app {
   display: flex;
-  height: calc(100vh-60px);
+  height: calc(100vh - 100px);
   background: #FFFFFF;
-  width: calc(100vw-400px);
+  width: 100%;
 }
 
 .sidebar {
   background-color: #f1f3f5;
+  width: 100px;
 }
 
 .sidebar-left {
-  width: 200px;
+  height: calc(100vh - 100px);
 }
 
 .sidebar-right {
-  width: 200px;
+  height: calc(100vh - 100px);
 }
 
 .content {
-  flex: 1;
+  flex-grow: 1;
   display: flex;
   flex-direction: column;
-  width: calc(100vw - 400px);
+  border-bottom: 1px solid #dee2e6;
 }
 
 .chat-room,
@@ -126,6 +124,5 @@ addNewMessage(newMessage) {
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 20px;
 }
 </style>

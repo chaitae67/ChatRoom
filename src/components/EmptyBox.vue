@@ -8,14 +8,17 @@
   export default {}
   </script>
   
+
   <style scoped>
-  .empty-room {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
-    color: #495057;
-    font-size: 18px;
+  .empty-box {
+    position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background-color: white;
+  margin: 0 auto; /* 중앙 정렬 */
+  height: calc(100vh - 150px); /* 변경 */
   }
+
   </style>
   

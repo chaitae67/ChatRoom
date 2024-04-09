@@ -27,7 +27,7 @@
       <input type="file" id="fileInput" @change="handleFileUpload" style="display: none;" />
       <!-- 파일 선택 버튼 -->
       <label for="fileInput" class="img-button">
-        <img src="../assets/photo.png" alt="Upload Icon" class="photo" />
+        <img src='../assets/images.svg' alt="Upload Icon" class="photo" />
       </label>
       <!-- 전송 버튼 -->
       <button type="submit" class="send-button">전송</button>
@@ -47,7 +47,6 @@
 import Modal from './Modal.vue';
 import UserMessage from './UserMessage.vue';
 import OtherMessage from './OtherMessage.vue';
-import { io } from 'socket.io-client';
 
 export default {
   components: {
@@ -60,48 +59,36 @@ export default {
   },
   data() {
     return {
+      // 각 채널의 메시지를 저장할 객체
       channelMessages: {
         1: [],
         2: []
-      },
-      lastMessages: {
-        1: null,
-        2: null
+        // 필요에 따라 다른 채널의 메시지 배열 추가
       },
       newMessage: '',
       selectedFile: null,
       isModalOpen: false,
       previewImage: '',
-      lastMessage: '',
-      
+      lastMessage: '' // 마지막 보낸 메시지를 저장할 변수 추가
     };
   },
   methods: {
     addMessage() {
       if (this.newMessage.trim() || this.selectedFile) {
-        const messageData = {
+        const message = {
           text: this.newMessage,
           timestamp: Date.now(),
           sender: 'user',
           file: this.selectedFile ? URL.createObjectURL(this.selectedFile) : null,
         };
-
-        // WebSocket을 통해 서버로 메시지 전송
-        this.socket.emit('message', messageData);
-
-        // 메시지를 자체적으로 표시하는 대신 소켓에서 받은 메시지를 기다림
-        this.channelMessages[this.channel.id].push(messageData);
-
+        this.channelMessages[this.channel.id].push(message);
+        this.$emit('new-message', message);
         this.newMessage = '';
         this.selectedFile = null;
         this.scrollToBottom();
-        this.lastMessage = messageData.text;
-
-        // 마지막 메시지를 업데이트
-        this.updateLastMessage(messageData);
+        this.lastMessage = message.text; // 마지막 보낸 메시지 업데이트
       }
     },
-    
     handleFileUpload(event) {
       const file = event.target.files[0];
       if (file && file.type.startsWith('image/')) {
@@ -120,24 +107,15 @@ export default {
     },
     sendImage() {
       if (this.selectedFile) {
-        const messageData = {
+        const message = {
           file: URL.createObjectURL(this.selectedFile),
           sender: 'user'
         };
-        
-        // WebSocket을 통해 서버로 이미지 메시지 전송
-        this.socket.emit('message', messageData);
-
-        // 메시지를 자체적으로 표시하는 대신 소켓에서 받은 메시지를 기다림
-        this.channelMessages[this.channel.id].push(messageData);
-
-        this.newMessage = '';
+        this.channelMessages[this.channel.id].push(message);
+        this.newMessage = ''; // 메시지 입력 초기화
         this.closeModal();
         this.scrollToBottom();
-        this.lastMessage = 'Image';
-
-        // 마지막 메시지를 업데이트
-        this.updateLastMessage(messageData);
+        this.lastMessage = 'Image'; // 마지막 보낸 메시지 업데이트 (이미지 전송인 경우)
       }
     },
     cancelImage() {
@@ -148,32 +126,10 @@ export default {
         const chatMessages = this.$refs.chatMessages;
         chatMessages.scrollTop = chatMessages.scrollHeight;
       });
-    },
-    updateLastMessage(message) {
-      // 마지막 메시지 업데이트
-      this.lastMessage = message.text;
     }
-  },
-  mounted() {
-    // VueSocketIO 대신 socket.io-client를 사용하여 소켓 초기화
-    this.socket = io('http://localhost:8080');
-
-    // 서버로부터 받은 메시지를 처리하는 부분
-    this.socket.on('message', (messageData) => {
-      this.channelMessages[this.channel.id].push(messageData);
-      this.scrollToBottom();
-
-      // 받은 메시지를 통해 마지막 메시지를 업데이트
-      this.updateLastMessage(messageData);
-      
-      // 새로운 메시지를 받으면 해당 메시지를 미리보기로 표시
-      this.lastMessages[this.channel.id] = messageData.text;
-    });
   }
 };
 </script>
-
-
 
 <style scoped>
 /* ChatRoom 컴포넌트에 대한 스타일링 */
@@ -182,23 +138,24 @@ export default {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  height: 100vh;
-  width: 812px;
   background-color: white;
   margin: 0 auto; /* 중앙 정렬 */
-}
+  height: calc(100vh - 150px); /* 변경 */
   
+}
   .chat-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    height: 43px;
+    height: 64px;
     background-color: #FFF;
+    border-bottom: 1px solid #dee2e6;
   }
   
   .profile-wrapper {
     display: flex;
     align-items: center;
+    margin-left: 20px;
   }
   
   .profile-image {
@@ -222,10 +179,11 @@ export default {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    height: 125px;
     border: 2px solid rgb(45, 168, 55);
     border-radius: 8px;
     padding: 5px;
+    margin-left: 20px;
+    
   }
   
   .message-input {
@@ -262,10 +220,10 @@ export default {
   }
   
   .box {
-    padding: 0px 20px;
     background-color:white ;
-    height: 750px;
+    height: calc(100vh - 250px);
     border-radius: 0px;
+    padding: 5px;
     overflow-y: auto; /* 새로운 스타일: 메시지가 많을 경우 스크롤 가능 */
   }
   

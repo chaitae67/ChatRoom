@@ -28,17 +28,4 @@ export default {
   text-align: center;
 }
 
-/* 화면 너비가 768px 이하일 때 */
-@media (max-width: 768px) {
-  .chat-app {
-    /* 반응형 스타일 */
-  }
-}
-
-/* 화면 너비가 768px보다 큰 경우 */
-@media (min-width: 769px) {
-  .chat-app {
-    /* 반응형 스타일 */
-  }
-}
 </style>

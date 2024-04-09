@@ -25,7 +25,6 @@
         </a>
       </li>
     </ul>
-    <div class="footer"></div>
   </nav>
 </template>
 
@@ -57,11 +56,12 @@ export default {
   display: flex;
   flex-direction: column;
   border-right: 1px solid #dee2e6;
-  min-height: 100vh;
-  width: 400px;
-  min-width: 400px;
+  border-bottom: 1px solid #dee2e6;
+  width: 500px;
   background-color: var(--seed-semantic-color-paper-default);
+  height: auto;
 }
+
 
 .list-header {
   display: flex;
