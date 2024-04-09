@@ -43,7 +43,7 @@ computed:{
 methods: {
   ...mapActions(['login']),
 
-  //로그인 성공시 메인페이지로 리다이렉션
+ 
   performLogin(){
     this.login({
       userId: this.userId,
