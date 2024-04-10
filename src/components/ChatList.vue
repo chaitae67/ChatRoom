@@ -4,8 +4,8 @@
       <div class="nickname-area">둗남</div>
     </div>
     <ul tabindex="0" role="list" aria-label="내 채널 리스트" class="list">
-      <li v-for="channel in channels" :key="channel.id" class="channel">
-        <a class="channel-content" @click="selectChannel(channel)">
+      <li v-for="channel in channels" :key="channel.id" :class="{ 'channel-selected': selectedChannel === channel }" class="channel">
+        <a class="channel-content" @click="selectChannel(channel)" @mouseenter="hoverChannel" @mouseleave="unhoverChannel">
           <div class="content-wrapper">
             <div class="profile-nickname-wrapper">
               <div class="profile-wrapper">
@@ -36,17 +36,23 @@ export default {
       required: true
     }
   },
+  data() {
+    return {
+      selectedChannel: null,
+      hoveredChannel: null
+    };
+  },
   methods: {
     selectChannel(channel) {
+      this.selectedChannel = channel;
       this.$emit('channel-selected', channel);
     },
     truncateText(text, maxLength) {
       if (text.length > maxLength) {
-        return text.substring(0, maxLength - 5) + '...'; // 텍스트 길이가 maxLength를 초과하면 생략 부호를 추가하여 반환
+        return text.substring(0, maxLength - 5) + '...';
       }
       return text;
-    },
-    
+    }
   }
 };
 </script>
@@ -61,7 +67,6 @@ export default {
   background-color: var(--seed-semantic-color-paper-default);
   height: auto;
 }
-
 
 .list-header {
   display: flex;
@@ -145,5 +150,11 @@ export default {
   overflow-x: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+/* 추가된 스타일 */
+.channel:hover,
+.channel-selected {
+  background-color: #f1f3f5;
 }
 </style>
