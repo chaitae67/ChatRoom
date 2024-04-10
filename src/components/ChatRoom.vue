@@ -22,7 +22,7 @@
     </div>
     <!-- 메시지 입력 폼 -->
     <form class="message-form" @submit.prevent>
-      <textarea v-model="newMessage" placeholder="메세지를 입력하세요." class="message-input"></textarea>
+      <textarea v-model="newMessage" placeholder="메세지를 입력하세요." class="message-input" @keydown.enter="sendMessageOnEnter"></textarea>
       <!-- 파일 선택 input -->
       <input type="file" id="fileInput" @change="handleFileUpload" style="display: none;" />
       <!-- 파일 선택 버튼 -->
@@ -120,6 +120,13 @@ export default {
     },
     cancelImage() {
       this.closeModal();
+    },
+    // 엔터를 눌렀을 때 메시지 전송
+    sendMessageOnEnter(event) {
+      if (event.keyCode === 13 && !event.shiftKey) {
+        event.preventDefault();
+        this.sendMessage();
+      }
     },
     // 메시지를 보낸 후에 스크롤을 맨 아래로 이동
     scrollToBottom() {
