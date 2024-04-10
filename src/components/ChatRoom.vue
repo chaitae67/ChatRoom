@@ -27,12 +27,10 @@
     <input type="file" id="fileInput" @change="handleFileUpload" style="display: none;" />
     <!-- 파일 선택 버튼 -->
     <label for="fileInput" class="img-button">
-      <img src='../assets/images.svg' alt="Upload Icon" class="photo" />
+      <img src='../assets/image_file_icon_149928.png' alt="Upload Icon" class="photo" />
     </label>
     <!-- 송신 버튼 -->
     <button type="submit" class="send-button1" @click.prevent="sendMessage">송신</button>
-    <!-- 수신 버튼 -->
-    <button type="submit" class="send-button2" @click.prevent="receiveMessage">수신</button>
   </form>
 
     <!-- 모달 -->
@@ -266,8 +264,8 @@ export default {
   }
   
   .photo {
-    width: 40px;
-    height: 40px;
+    width: 35px;
+    height: 35px;
     cursor: pointer;
     margin-bottom: -50px;
     margin-right: 750px;
