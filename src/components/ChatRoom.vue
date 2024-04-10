@@ -233,7 +233,7 @@ export default {
   .send-button1 {
     align-self: flex-end;
     margin-top: 8px;
-    padding: 6px 12px;
+    padding: 8px 20px;
     background-color: #04B404;
     color: white;
     border: none;
