@@ -37,14 +37,16 @@ export default {
           profileImage: 'https://example.com/profile1.jpg',
           nickname: '바이바이',
           lastActive: '오전 03:03',
-          lastMessage: '내 컴퓨터에서 로그인했어요. 본인이 아니라면 로그아웃 해주세요.'
+          lastMessage: '내 컴퓨터에서 로그인했어요. 본인이 아니라면 로그아웃 해주세요.',
+          lastImage: '',
         },
         {
           id: 2,
           profileImage: 'https://example.com/profile2.jpg',
           nickname: '안녕하세요',
           lastActive: '오후 01:30',
-          lastMessage: '안녕하세요. 지금 어디 계세요?'
+          lastMessage: '안녕하세요. 지금 어디 계세요?',
+          lastImage: '',
         }
         // 추가 채널 정보
       ],
@@ -79,6 +81,7 @@ export default {
               ...channel,
               lastMessage: newMessage.text,
               lastActive: new Date().toLocaleTimeString(),
+              lastImage: '사진을 보',
             };
           }
           return channel;

@@ -23,7 +23,8 @@
   
   <style scoped>
   .message {
-    display: flex; flex-direction: column;
+    display: flex; 
+    flex-direction: column;
     margin-bottom: 10px; /* 메시지 간격 조절 */
     word-wrap: break-word;
     max-width: 50%;
