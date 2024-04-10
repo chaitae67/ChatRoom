@@ -21,17 +21,20 @@
       </div>
     </div>
     <!-- 메시지 입력 폼 -->
-    <form class="message-form" @submit.prevent="addMessage">
-      <textarea v-model="newMessage" placeholder="메세지를 입력하세요." class="message-input"></textarea>
-      <!-- 파일 선택 input -->
-      <input type="file" id="fileInput" @change="handleFileUpload" style="display: none;" />
-      <!-- 파일 선택 버튼 -->
-      <label for="fileInput" class="img-button">
-        <img src='../assets/buybye.png' alt="Upload Icon" class="photo" />
-      </label>
-      <!-- 전송 버튼 -->
-      <button type="submit" class="send-button">전송</button>
-    </form>
+  <form class="message-form" @submit.prevent>
+    <textarea v-model="newMessage" placeholder="메세지를 입력하세요." class="message-input"></textarea>
+    <!-- 파일 선택 input -->
+    <input type="file" id="fileInput" @change="handleFileUpload" style="display: none;" />
+    <!-- 파일 선택 버튼 -->
+    <label for="fileInput" class="img-button">
+      <img src='../assets/images.svg' alt="Upload Icon" class="photo" />
+    </label>
+    <!-- 송신 버튼 -->
+    <button type="submit" class="send-button1" @click.prevent="sendMessage">송신</button>
+    <!-- 수신 버튼 -->
+    <button type="submit" class="send-button2" @click.prevent="receiveMessage">수신</button>
+  </form>
+
     <!-- 모달 -->
     <Modal v-if="isModalOpen" @close="closeModal" @send="sendImage">
       <img :src="previewImage" alt="Preview" class="preview-image" />
@@ -69,26 +72,46 @@ export default {
       selectedFile: null,
       isModalOpen: false,
       previewImage: '',
-      lastMessage: '' // 마지막 보낸 메시지를 저장할 변수 추가
+      lastMessage: '', // 마지막 보낸 메시지를 저장할 변수 추가
+      LastImage:''
     };
   },
   methods: {
-    addMessage() {
-      if (this.newMessage.trim() || this.selectedFile) {
-        const message = {
-          text: this.newMessage,
-          timestamp: Date.now(),
-          sender: 'user',
-          file: this.selectedFile ? URL.createObjectURL(this.selectedFile) : null,
-        };
-        this.channelMessages[this.channel.id].push(message);
-        this.$emit('new-message', message);
-        this.newMessage = '';
-        this.selectedFile = null;
+    sendMessage() {
+    if (this.newMessage.trim() || this.selectedFile) {
+      const message = {
+        text: this.newMessage,
+        timestamp: Date.now(),
+        sender: 'user',
+        file: this.selectedFile ? URL.createObjectURL(this.selectedFile) : null,
+      };
+      this.channelMessages[this.channel.id].push(message);
+      this.newMessage = '';
+      this.selectedFile = null;
         this.scrollToBottom();
         this.lastMessage = message.text; // 마지막 보낸 메시지 업데이트
+        this.$emit('new-message', message);
+
       }
     },
+     // 메시지를 수신하는 함수
+  receiveMessage() {
+    if (this.newMessage.trim() || this.selectedFile) {
+      const message = {
+        text: this.newMessage,
+        timestamp: Date.now(),
+        sender: 'other', // 다른 사용자가 보낸 메시지로 가정
+        file: this.selectedFile ? URL.createObjectURL(this.selectedFile) : null,
+      };
+      this.channelMessages[this.channel.id].push(message);
+      this.newMessage = '';
+      this.selectedFile = null;
+      this.scrollToBottom();
+      this.lastMessage = message.text; // 마지막 보낸 메시지 업데이트
+      this.$emit('new-message', message);
+
+    }
+  },
     handleFileUpload(event) {
       const file = event.target.files[0];
       if (file && file.type.startsWith('image/')) {
@@ -106,18 +129,20 @@ export default {
       this.selectedFile = null;
     },
     sendImage() {
-      if (this.selectedFile) {
-        const message = {
-          file: URL.createObjectURL(this.selectedFile),
-          sender: 'user'
-        };
-        this.channelMessages[this.channel.id].push(message);
-        this.newMessage = ''; // 메시지 입력 초기화
-        this.closeModal();
-        this.scrollToBottom();
-        this.lastMessage = 'Image'; // 마지막 보낸 메시지 업데이트 (이미지 전송인 경우)
-      }
-    },
+    if (this.selectedFile) {
+      const message = {
+        file: URL.createObjectURL(this.selectedFile),
+        timestamp: Date.now(),
+        sender: 'user',
+      };
+      this.channelMessages[this.channel.id].push(message);
+      this.closeModal();
+      this.scrollToBottom();
+      this.lastIamge = 'Image'; // 마지막 보낸 메시지 업데이트 (이미지 전송인 경우)
+      this.$emit('selectedFile', message);
+
+    }
+  },
     cancelImage() {
       this.closeModal();
     },
@@ -207,7 +232,17 @@ export default {
     height: 24px;
   }
   
-  .send-button {
+  .send-button1 {
+    align-self: flex-end;
+    margin-top: 8px;
+    padding: 6px 12px;
+    background-color: #04B404;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  .send-button2 {
     align-self: flex-end;
     margin-top: 8px;
     padding: 6px 12px;

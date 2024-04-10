@@ -23,7 +23,10 @@ export default {
 </script>
 
 <style scoped>
-.message {
+
+.other-message {
+  background-color: #dadada;
+  margin-right: auto; /* 상대방 메시지 왼쪽 정렬 */
   display: flex;
   flex-direction: column;
   margin-bottom: 10px; /* 메시지 간격 조절 */
@@ -35,13 +38,6 @@ export default {
   border-radius: 12px; 
   min-width: 20%;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* 선택적: 그림자 효과 추가 */
-}
-
-.other-message {
-  background-color: #f1f0f0;
-  margin-right: auto; /* 상대방 메시지 왼쪽 정렬 */
-  text-align: left;
-  border: 1px solid #4B8A08;
 }
 
 .timestamp {
