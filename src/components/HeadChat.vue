@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <img src="../assets/buybye.png" alt="바이바이" class="bblogo">
-    <button @click="leaveChat" class="out">나가기</button>
+    <button class="out">나가기</button>
   </div>
 </template>
 
