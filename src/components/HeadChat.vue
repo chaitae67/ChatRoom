@@ -14,22 +14,24 @@
   border-bottom: 1px solid #dee2e6;
   height: 50px;
   -webkit-locale: auto;
+  width: 100%;
 }
 
 .bblogo {
   height: 60px;
-  padding: 40px;
-  margin-left: 60px;
+  margin-left: 300px;
+  margin-bottom:10px
 }
 
 .out {
-  margin-top: 8px;
-  padding: 6px 12px;
+  padding: 8px 15px;
   background-color: #04B404;
   color: white;
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  margin-right: 10px; /* 버튼을 오른쪽으로 이동시킵니다. */
+  font-size:16px;
+  margin-bottom:10px;
+  margin-right:300px
 }
 </style>

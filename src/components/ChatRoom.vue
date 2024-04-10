@@ -27,7 +27,7 @@
       <input type="file" id="fileInput" @change="handleFileUpload" style="display: none;" />
       <!-- 파일 선택 버튼 -->
       <label for="fileInput" class="img-button">
-        <img src='../assets/images.svg' alt="Upload Icon" class="photo" />
+        <img src='../assets/buybye.png' alt="Upload Icon" class="photo" />
       </label>
       <!-- 전송 버튼 -->
       <button type="submit" class="send-button">전송</button>
@@ -182,7 +182,6 @@ export default {
     border: 2px solid rgb(45, 168, 55);
     border-radius: 8px;
     padding: 5px;
-    margin-left: 20px;
     
   }
   

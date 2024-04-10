@@ -91,6 +91,7 @@ export default {
 </script>
 
 <style scoped>
+
 .app {
   display: flex;
   height: calc(100vh - 100px);
@@ -105,10 +106,12 @@ export default {
 
 .sidebar-left {
   height: calc(100vh - 100px);
+  width: 300px;
 }
 
 .sidebar-right {
   height: calc(100vh - 100px);
+  width: 300px;
 }
 
 .content {

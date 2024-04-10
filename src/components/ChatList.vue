@@ -57,7 +57,7 @@ export default {
   flex-direction: column;
   border-right: 1px solid #dee2e6;
   border-bottom: 1px solid #dee2e6;
-  width: 500px;
+  width: 370px;
   background-color: var(--seed-semantic-color-paper-default);
   height: auto;
 }
