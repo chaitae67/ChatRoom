@@ -1,7 +1,7 @@
 <template>
   <div class="login_container">
     <div class="logo_container">
-      <img @click="navigateToMain" src="../assets/BB.svg" style="width: 80px; height: 80px; cursor: pointer;">
+      <img @click="navigateToMain" src="../assets/WTF로고.svg" style="width: 80px; height: 80px; cursor: pointer;">
     </div>
     <div class="login_text">
       ID/PW 로그인 
@@ -156,7 +156,7 @@ methods: {
   text-align: center;
   border-radius: 3px;
   margin: 15px 0px 20px;
-  background-color: rgb(5, 174, 5);
+  background-color: rgb(0, 0, 0);
 }
 .signup_box{
   text-align: center;
@@ -169,7 +169,7 @@ methods: {
   font-size:14px;
   cursor: pointer;
   font-weight:700;
-  color: rgb(5, 174, 5);
+  color: rgb(0, 0, 0);
 }
 .password_icon{
   position: absolute;

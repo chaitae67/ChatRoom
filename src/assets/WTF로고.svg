@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="_레이어_1" data-name="레이어 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 197.47 112.57">
+  <defs>
+    <style>
+      .cls-1 {
+        letter-spacing: -.12em;
+      }
+
+      .cls-2 {
+        letter-spacing: 0em;
+      }
+
+      .cls-3 {
+        font-family: ONEMobilePOPRegular, 'ONE Mobile POP';
+        font-size: 18px;
+      }
+
+      .cls-3, .cls-4 {
+        fill: #231815;
+      }
+
+      .cls-4 {
+        stroke-width: 0px;
+      }
+
+      .cls-5 {
+        letter-spacing: -.04em;
+      }
+
+      .cls-6 {
+        letter-spacing: -.06em;
+      }
+    </style>
+  </defs>
+  <polygon class="cls-4" points="4.99 0 23.29 0 30.42 49.66 32.08 49.66 35.88 18.06 45.62 18.06 50.61 49.66 51.8 49.66 55.84 18.77 72.95 18.77 62.49 83.64 46.1 83.64 41.11 57.76 37.31 83.64 19.49 83.64 4.99 0"/>
+  <polyline class="cls-4" points="164.48 50.35 192.48 50.14 192.48 34.22 164.48 33.78"/>
+  <path class="cls-4" d="M160.63,33.74v-17.11l31.84-.24V0H58.93l-2.38,15.68h37.07v67.96s17.82,1.19,17.82,0V16.63h23.76l7.37.09v66.92h17.58v-33.27"/>
+  <text class="cls-3" transform="translate(0 106.3)"><tspan x="0" y="0">WE</tspan><tspan class="cls-1" x="27.99" y="0">A</tspan><tspan class="cls-2" x="39.15" y="0">THER </tspan><tspan class="cls-5" x="92.07" y="0">T</tspan><tspan x="102.92" y="0">O </tspan><tspan class="cls-6" x="121.25" y="0">F</tspan><tspan x="130.25" y="0">ASHON</tspan></text>
+  <circle class="cls-4" cx="185.86" cy="79.01" r="4.63"/>
+</svg>

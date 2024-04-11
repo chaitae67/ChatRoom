@@ -1,7 +1,7 @@
 <template>
     <div class="signup_container">
         <div class="logo_container">
-            <img @click="navigateToMain" src="../assets/BB.svg" style="width: 80px; height: 80px; cursor: pointer;">
+            <img @click="navigateToMain" src="../assets/WTF로고.svg" style="width: 100px; height: 100px; cursor: pointer;">
         </div>
         <div class="signup_text">회원가입</div>
         <div>
@@ -198,7 +198,7 @@ export default {
     border: none;
     width: 100%;
     height: 60px;
-    background: rgb(82, 187, 82);
+    background: rgb(0, 0, 0);
     border-radius: 4px;
     font-weight: 700;
     font-size: 16px;
