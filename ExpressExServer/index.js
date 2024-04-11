@@ -4,8 +4,12 @@ const app = require('./app');
 const { Server } = require('socket.io');
 require('dotenv').config();
 const cors = require('cors');
+const bodyParser = require('body-parser');
 const authController = require('../ExpressExServer/controllers/authController');
-
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.json({ limit: '100mb' }));
+app.use(express.urlencoded({ limit: '100mb', extended: true }));
 const router = express.Router();
 
 // 라우트 정의

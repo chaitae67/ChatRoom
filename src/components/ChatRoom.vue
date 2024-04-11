@@ -5,7 +5,7 @@
         <h2 class="user-name">{{ userName }}</h2>
       </div>
       <MessageContainer :messages="messages"/>
-      <MessageContainerR :receive="receive"/>
+      <MeesageContainerRecieve :receive="receive"/>
       <div class="input-container">
         <button @click="showFileInput" class="attach-button">사진 첨부</button>
         <input type="file" accept="image/*" ref="fileInput" @change="handleImageSelect" capture="environment" class="file-input">
@@ -21,7 +21,7 @@
   <script>
   import MessageContainer from './MessageContainer.vue';
   import socket from '../../server.js';
-  import MessageContainerR from './MeesageContainerR.vue';
+  import MeesageContainerRecieve from './MeesageContainerRecieve.vue';
   import axios from 'axios';
   import FormData from 'form-data';
   
@@ -29,7 +29,7 @@
     name: 'Chat',
     components: {
       MessageContainer:MessageContainer,
-      MessageContainerR:MessageContainerR,
+      MeesageContainerRecieve:MeesageContainerRecieve,
     },
 
     props: {

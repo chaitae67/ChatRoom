@@ -13,7 +13,7 @@
 
 <script>
 export default {
-  name: 'MessageContainerR',
+  name: 'MessageContainerRecieve',
   props: {
     // props 이름을 messages에서 receive로 변경합니다.
     receive: {

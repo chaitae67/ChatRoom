@@ -1,23 +1,30 @@
-const mongoose = require("mongoose");
+// models/chat.js
+
+const mongoose = require('mongoose');
 
 const chatSchema = new mongoose.Schema({
-  chat: {
+  text: {
     type: String,
-    required: false, // 텍스트 메시지가 없는 경우를 대비해 필수는 아님
+    required: true
   },
-  image: {
+  timestamp: {
+    type: Date,
+    required: true,
+    default: Date.now
+  },
+  sender: {
     type: String,
-    required: false, // 이미지가 없는 경우를 대비해 필수는 아님
+    required: true
   },
-  user: {
-    id: {
-      type: mongoose.Schema.Types.ObjectId, // ObjectId 타입 정확히 명시
-      ref: "User",
-    },
-    name: String,
+  type: {
+    type: String,
+    required: true,
+    default: 'text'
   },
-},
-  { timestamps: true } // 'timestamp'에서 'timestamps'로 수정하여 생성 시간과 수정 시간을 자동으로 관리
-);
+  file: String, // 이미지 파일의 URL 또는 경로를 저장할 수 있도록 문자열 필드 추가
+  fileType: String // 파일의 종류를 저장할 수 있도록 파일 유형을 나타내는 필드 추가 (예: 'image/jpeg', 'image/png' 등)
+});
 
-module.exports = mongoose.model("Chat", chatSchema);
+const Chat = mongoose.model('Chat', chatSchema);
+
+module.exports = Chat;

@@ -7,6 +7,18 @@ import torch
 import torchvision.models as models
 from torchvision import transforms
 import logging
+from fastapi.middleware.cors import CORSMiddleware
+
+app = FastAPI()
+
+# CORS 미들웨어 설정
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # 모든 origin을 허용합니다
+    allow_credentials=True,
+    allow_methods=["GET", "POST"],
+    allow_headers=["*"],
+)
 
 # 로깅 설정
 logging.basicConfig(level=logging.INFO)
@@ -62,8 +74,6 @@ class ImageClassifier:
             logging.error(f"이미지 분류 중 오류 발생: {e}")
             raise
 
-# FastAPI 앱 생성 및 엔드포인트 정의
-app = FastAPI()
 classifier = ImageClassifier('./resnet50_binary_classification_model.pth')
 
 @app.post("/classify")

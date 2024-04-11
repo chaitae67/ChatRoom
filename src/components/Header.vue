@@ -42,7 +42,7 @@
         </div>
         <div class="chat_container">
           <img src="../assets/chat-square-dots.svg" class="chat_logo">
-          <span style="margin-right: 25px;">채팅하기</span>
+          <span style="margin-right: 25px;" @click="chatRoomChange">채팅하기</span>
           <span @click="performLogout">로그아웃</span>
         </div>
       </div>
@@ -90,6 +90,12 @@
       <div class="categoly_container">
         <img src="../assets/list.svg" alt="없음" style="width: 25px; height: 25px" />
       </div>
+      <!-- 이미지 검증을 위한 코드
+      <div>
+        <input type="file" ref="fileInput" @change="handleFileChange">
+        <button @click="sendImage">이미지 전송</button>
+      </div>
+      -->
     </header>
   </div>
 </template>
@@ -103,7 +109,7 @@ export default {
     return {
       showLoginModal: false, // 모달 창을 보여주는 상태 변수
       isHovered: '', // 현재 호버된 버튼의 종류를 저장
-      
+      /* selectedFile: null, */
     };
   },
   computed:{
@@ -120,7 +126,35 @@ export default {
         this.$router.push('/LogIn');
       });
     },
+    /* 이미지 관련 코드
+    handleFileChange(event) {
+      this.selectedFile = event.target.files[0];
+    },
+    sendImage() {
+      if (!this.selectedFile) {
+        console.error('이미지를 선택해주세요.');
+        return;
+      }
 
+      const formData = new FormData();
+      formData.append('file', this.selectedFile);
+
+      fetch('http://localhost:8000/classify', {
+        method: 'POST',
+        body: formData,
+      })
+        .then((response) => response.json())
+        .then((result) => {
+          console.log('결과:', result);
+        })
+        .catch((error) => {
+          console.error('에러:', error);
+        });
+    },
+    */
+    chatRoomChange() {
+      window.location.href = 'http://220.69.241.101:8080/';
+    },
     openLoginModal() {
       this.showLoginModal = true; // 모달 창을 보여주는 메소드
     },
