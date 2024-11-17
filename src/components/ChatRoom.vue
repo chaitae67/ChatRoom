@@ -48,6 +48,7 @@
 import Modal from './Modal.vue';
 import UserMessage from './UserMessage.vue';
 import OtherMessage from './OtherMessage.vue';
+import axios from 'axios';
 
 export default {
   components: {
@@ -70,7 +71,8 @@ export default {
       isModalOpen: false,
       previewImage: '',
       lastMessage: '', // 마지막 보낸 메시지를 저장할 변수 추가
-      LastImage:''
+      LastImage: '',
+      refreshInterval: null // 타이머를 저장할 변수
     };
   },
   methods: {
@@ -89,17 +91,36 @@ export default {
         this.$emit('new-message', message);
       }
     },
-    sendImage() {
+    async sendImage() {
       if (this.selectedFile) {
-        const message = {
-          file: URL.createObjectURL(this.selectedFile),
-          timestamp: Date.now(),
-          sender: 'user',
-        };
-        this.channelMessages[this.channel.id].push(message);
-        this.closeModal();
-        this.lastIamge = 'Image'; // 마지막 보낸 메시지 업데이트 (이미지 전송인 경우)
-        this.$emit('selectedFile', message);
+        try {
+          const formData = new FormData();
+          formData.append('file', this.selectedFile);
+
+          const response = await axios.post('http://localhost:8000/classify', formData, {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            },
+          });
+
+          const { metadata_result, classify_result } = response.data;
+
+          alert(`메타데이터 확인 결과: ${metadata_result}`);
+          alert(`이미지 분류 결과: ${classify_result}`);
+
+          const message = {
+            file: URL.createObjectURL(this.selectedFile),
+            text: `${metadata_result} - ${classify_result}`,
+            timestamp: Date.now(),
+            sender: 'user',
+          };
+
+          this.channelMessages[this.channel.id].push(message);
+          this.closeModal();
+        } catch (error) {
+          console.error('이미지 전송 중 오류 발생:', error);
+          alert('이미지 전송 중 오류가 발생했습니다. 다시 시도해주세요.');
+        }
       }
     },
     handleFileUpload(event) {
@@ -121,24 +142,30 @@ export default {
     cancelImage() {
       this.closeModal();
     },
-    // 엔터를 눌렀을 때 메시지 전송
     sendMessageOnEnter(event) {
       if (event.keyCode === 13 && !event.shiftKey) {
         event.preventDefault();
         this.sendMessage();
       }
     },
-    // 메시지를 보낸 후에 스크롤을 맨 아래로 이동
     scrollToBottom() {
       const chatBox = this.$refs.chatBox;
       chatBox.scrollTop = chatBox.scrollHeight;
+    },
+    fetchMessages() {
+      // 서버에서 메시지 가져오는 로직 (더미 데이터 예시)
+      axios.get(`http://localhost:8000/messages/${this.channel.id}`).then(response => {
+        this.channelMessages[this.channel.id] = response.data;
+        console.log("Messages updated!");
+      }).catch(error => {
+        console.error('메시지 업데이트 중 오류 발생:', error);
+      });
     }
   },
   watch: {
     channelMessages: {
       deep: true,
       handler() {
-        // channelMessages 객체가 변경될 때마다 동작하도록
         this.$nextTick(() => {
           this.scrollToBottom();
         });
@@ -146,9 +173,21 @@ export default {
     }
   },
   mounted() {
-    this.scrollToBottom(); // 컴포넌트가 마운트되면 스크롤을 맨 아래로 이동
+    this.scrollToBottom();
+
+    // 10초마다 새로고침 설정
+    this.refreshInterval = setInterval(() => {
+      this.fetchMessages();
+    }, 10000); // 10,000ms = 10초
+  },
+  beforeUnmount() {
+    // 컴포넌트가 파괴될 때 타이머 정리
+    if (this.refreshInterval) {
+      clearInterval(this.refreshInterval);
+    }
   }
 };
+
 </script>
 
 <style scoped>

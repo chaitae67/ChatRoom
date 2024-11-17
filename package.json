@@ -8,7 +8,9 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "axios": "^1.7.7",
     "core-js": "^3.8.3",
+    "exif-js": "^2.3.0",
     "socket.io-client": "^4.7.5",
     "vue": "^3.2.13",
     "vue-socket.io": "^3.0.10"
